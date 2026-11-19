@@ -2624,7 +2624,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   }
   document.querySelectorAll("#turnN button").forEach(b=>b.addEventListener("click",()=>{ memN=+b.dataset.n; if(memTurn>=memN) memTurn=0; try{ localStorage.setItem("memN",memN); }catch(e){} memShow(); }));
   memShow();
-  const cardDeck = () => Object.keys(CARD_SND).filter(k=> mode==="hz" ? CARD_SND[k].kind==="hz" : mode==="db" ? CARD_SND[k].kind==="db" : true);
+  const cardDeck = () => Object.keys(CARD_SND);   // 화면 모드와 상관없이 세기 카드 2장 + 높낮이 카드 2장 모두
   function cardShow(){
     const I=CARD_INST[cardCur.i], S=CARD_SND[cardCur.s];
     $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name+(cardCur.i==="glk"?" (실로폰)":"");
