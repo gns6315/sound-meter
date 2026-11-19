@@ -435,6 +435,16 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
 .unit{margin:4px 0 0;font-size:.84rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
 .unit b{color:var(--ink)}
 .modeAsk{margin:0;font-weight:700;font-size:1.05rem}
+.startBar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.startBar button{font-size:clamp(1.25rem,4vw,1.55rem);padding:16px 30px;border-radius:14px;min-height:64px;touch-action:manipulation}
+.startBar button.on{background:var(--z4);border-color:var(--z4);color:#fff}
+.startBar span{font-weight:700;color:var(--muted)}
+.toolbar button{min-height:52px;font-size:1rem;touch-action:manipulation}
+.toolbar button.jump{border-style:dashed}
+.setDet{flex:1 1 100%;border-top:1px solid var(--line);padding-top:6px}
+.setDet summary{cursor:pointer;font-weight:700;padding:8px 0;color:var(--muted)}
+.setBody{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding-top:6px}
+.setBody .field.grow{flex:1 1 240px}
 .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .modes button{position:relative;display:flex;align-items:center;gap:12px;text-align:left;padding:14px 14px;
   background:var(--panel);border:3px solid var(--line);border-radius:16px;font-weight:500;min-width:0}
@@ -491,6 +501,11 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     </button>
   </nav>
 
+  <div class="startBar">
+    <button type="button" class="primary" id="topStart">🎤 측정 시작</button>
+    <span id="topStartTip">누른 다음 ‘허용’을 눌러요</span>
+  </div>
+
   <section class="readout">
     <div class="panel card need-hz">
       <h2><i style="background:var(--trace)"></i>소리의 높낮이</h2>
@@ -521,18 +536,20 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   </section>
 
   <!-- ===== 더 해 보기 ===== -->
-  <section class="tools" aria-label="더 해 보기">
-    <p class="modeAsk">더 해 보기</p>
+  <section class="tools" aria-label="활동 고르기">
+    <p class="modeAsk">활동 고르기 (누르면 열려요)</p>
     <div class="toolbar">
       <button type="button" data-tool="card" class="today" aria-pressed="false">🃏 카드 뽑기 도전<small>5차시</small></button>
       <button type="button" data-tool="xman" class="today" aria-pressed="false">🕵️ X맨 미션 화면<small>5차시</small></button>
-      <button type="button" data-tool="scope" aria-pressed="false">떨림 모양 보기</button>
-      <button type="button" data-tool="light" class="need-db" aria-pressed="false">소음 신호등</button>
-      <button type="button" data-tool="sing" class="need-hz" aria-pressed="false">따라 부르기 게임</button>
-      <button type="button" data-tool="quiet" class="need-db" aria-pressed="false">소음 줄이기 실험</button>
-      <button type="button" data-tool="dist" class="need-db" aria-pressed="false">거리와 소리 세기</button>
-      <button type="button" data-tool="rec2" aria-pressed="false">녹음해서 다시 듣기</button>
-      <button type="button" id="bigBtn" aria-pressed="false">크게 보기 (화면 가득)</button>
+      <button type="button" data-tool="scope" aria-pressed="false">〰️ 떨림 모양 보기</button>
+      <button type="button" data-tool="light" class="need-db" aria-pressed="false">🚦 소음 신호등</button>
+      <button type="button" data-tool="sing" class="need-hz" aria-pressed="false">🎵 따라 부르기 게임</button>
+      <button type="button" data-tool="quiet" class="need-db" aria-pressed="false">🧽 소음 줄이기 실험</button>
+      <button type="button" data-tool="dist" class="need-db" aria-pressed="false">📏 거리와 소리 세기</button>
+      <button type="button" data-tool="rec2" aria-pressed="false">⏺️ 녹음해서 다시 듣기</button>
+      <button type="button" class="jump need-hz" data-jump="refSec">🎹 악기 그림으로 듣기</button>
+      <button type="button" class="jump" data-jump="recSec">📋 실험 기록하기</button>
+      <button type="button" id="bigBtn" aria-pressed="false">🔍 크게 보기 (화면 가득)</button>
     </div>
   </section>
 
@@ -672,43 +689,48 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
 
   <section class="panel controls">
     <button class="primary" id="startBtn" type="button">측정 시작</button>
-    <div class="field mic">
-      <label for="micSel">마이크 고르기</label>
-      <select id="micSel"><option value="">컴퓨터에서 정한 마이크</option></select>
-      <span class="hint" id="micHint">측정 시작을 한 번 누르면 마이크 이름이 모두 보여요.</span>
-    </div>
-    <div class="field need-hz">
-      <label for="range">높낮이 표시 범위</label>
-      <select id="range">
-        <option value="200,1600" selected>칼림바·우쿨렐레 (200–1600 Hz (헤르츠))</option>
-        <option value="150,1500">어린이 목소리 (150–1500 Hz (헤르츠))</option>
-        <option value="70,1000">선생님 목소리 (70–1000 Hz (헤르츠))</option>
-        <option value="250,2500">리코더·글로켄슈필 (250–2500 Hz (헤르츠))</option>
-        <option value="50,4000">넓게 (50–4000 Hz (헤르츠))</option>
-        <option value="30,5000">아주 넓게 (30–5000 Hz (헤르츠))</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="secs">그래프 길이</label>
-      <select id="secs">
-        <option value="5">5초</option>
-        <option value="10" selected>10초</option>
-        <option value="20">20초</option>
-      </select>
-    </div>
-    <div class="field grow need-hz">
-      <label for="sens">주변 소리 거르기</label>
-      <input type="range" id="sens" min="1" max="10" value="4">
-      <span class="scale2"><span>약하게</span><span>세게</span></span>
-      <span class="hint">아이들이 많은 교실은 → 세게 · 선이 튀면 → 세게 · 헤르츠 숫자가 안 바뀌면 → 약하게 <a href="#help" id="helpLink">도움말</a></span>
-    </div>
-    <div class="field need-db">
-      <label for="cal">데시벨 맞추기 <span id="calVal">0</span></label>
-      <input type="range" id="cal" min="-30" max="30" value="0">
-      <span class="hint">다른 소음 측정 앱과 숫자가 다르면 맞춰 주세요</span>
-    </div>
     <button id="pauseBtn" type="button">그래프 멈춤</button>
     <button id="resetBtn" type="button">지우기</button>
+    <details class="setDet">
+      <summary>⚙️ 선생님 설정 (마이크 · 범위 · 주변 소리 거르기)</summary>
+      <div class="setBody">
+        <div class="field mic">
+          <label for="micSel">마이크 고르기</label>
+          <select id="micSel"><option value="">컴퓨터에서 정한 마이크</option></select>
+          <span class="hint" id="micHint">측정 시작을 한 번 누르면 마이크 이름이 모두 보여요.</span>
+        </div>
+        <div class="field need-hz">
+          <label for="range">높낮이 표시 범위</label>
+          <select id="range">
+            <option value="200,1600" selected>칼림바·우쿨렐레 (200–1600 Hz (헤르츠))</option>
+            <option value="150,1500">어린이 목소리 (150–1500 Hz (헤르츠))</option>
+            <option value="70,1000">선생님 목소리 (70–1000 Hz (헤르츠))</option>
+            <option value="250,2500">리코더·글로켄슈필 (250–2500 Hz (헤르츠))</option>
+            <option value="50,4000">넓게 (50–4000 Hz (헤르츠))</option>
+            <option value="30,5000">아주 넓게 (30–5000 Hz (헤르츠))</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="secs">그래프 길이</label>
+          <select id="secs">
+            <option value="5">5초</option>
+            <option value="10" selected>10초</option>
+            <option value="20">20초</option>
+          </select>
+        </div>
+        <div class="field grow need-hz">
+          <label for="sens">주변 소리 거르기</label>
+          <input type="range" id="sens" min="1" max="10" value="4">
+          <span class="scale2"><span>약하게</span><span>세게</span></span>
+          <span class="hint">아이들이 많은 교실은 → 세게 · 선이 튀면 → 세게 · 헤르츠 숫자가 안 바뀌면 → 약하게 <a href="#help" id="helpLink">도움말</a></span>
+        </div>
+        <div class="field need-db">
+          <label for="cal">데시벨 맞추기 <span id="calVal">0</span></label>
+          <input type="range" id="cal" min="-30" max="30" value="0">
+          <span class="hint">다른 소음 측정 앱과 숫자가 다르면 맞춰 주세요</span>
+        </div>
+      </div>
+    </details>
   </section>
 
   <details class="panel help" id="help">
@@ -739,7 +761,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     <div class="stat need-db"><span class="label">가장 큰 소리</span><b id="sLoud">–</b></div>
   </section>
 
-  <section class="panel rec">
+  <section class="panel rec" id="recSec">
     <h2>실험 기록</h2>
     <p id="recIntro"></p>
     <div class="rec-row">
@@ -2214,6 +2236,8 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     requestAnimationFrame(()=>p.scrollIntoView({behavior:"smooth",block:"start"}));
   }
   toolBtns.forEach(b=>b.addEventListener("click",()=>openToolPanel(b.dataset.tool)));
+  $("topStart").addEventListener("click",()=>$("startBtn").click());
+  document.querySelectorAll(".toolbar button[data-jump]").forEach(b=>b.addEventListener("click",()=>$(b.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"})));
 
   // 캔버스 크기 맞추기 도우미
   function fitCanvas(cv){
@@ -2741,6 +2765,8 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   // 매 프레임: 열린 활동만 그리기
   function toolsFrame(now){
     $("bigStart").textContent = running? "측정 멈춤" : "측정 시작";
+    const ts=$("topStart"), want = running? "⏹ 측정 멈춤" : "🎤 측정 시작";
+    if(ts.textContent!==want){ ts.textContent=want; ts.classList.toggle("on",running); $("topStartTip").textContent = running? "소리를 내 보세요! 숫자와 그래프가 바뀌어요." : "누른 다음 ‘허용’을 눌러요"; }
     if(openTool==="scope" && !$("tool-scope").hidden) drawScope(now);
     if(openTool==="light") updateLight(now);
     if(openTool==="sing") updateSing(now);
