@@ -236,7 +236,13 @@ svg.pic .hit{cursor:pointer}
 @keyframes pulse{50%{filter:brightness(1.3)}}
 @media (prefers-reduced-motion:reduce){.kalimba button.next,.g-bar.next{animation:none}}
 .ukeLead{margin:0;font-size:1.1rem !important;color:var(--ink) !important;line-height:1.6;max-width:none !important}
-.ukeLead .red{color:var(--z4)}
+.ukeLead .red{color:var(--z4)} .ukeLead .blue{color:var(--trace)}
+.ukeSteps.recSteps{grid-template-columns:repeat(7,minmax(0,1fr))}
+.recSteps button span{font-size:1.25rem}
+@media (max-width:700px){.ukeSteps.recSteps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.moreBody{display:grid;gap:10px}
+.u-str.dim{opacity:.35}
+.aux p.gameMsg{font-size:1.08rem}
 .ukeSteps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .ukeSteps button{display:grid;gap:2px;justify-items:center;padding:10px 4px;min-height:64px;border-radius:12px;font-size:1rem;touch-action:manipulation}
 .ukeSteps button small{font-weight:600;font-size:.78rem;color:var(--muted)}
@@ -710,14 +716,15 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     <div class="inst" data-inst="uke">
       <div class="instHead"><h3>우쿨렐레</h3><div class="hbtns"><button type="button" class="bigToggle">크게 보기</button></div></div>
       <div class="instNow"></div>
-      <p class="ukeLead">👉 손가락으로 줄을 누르면 <b class="red">빨간 부분</b>만 떨려요.<br><b>떨리는 줄이 짧을수록 높은 소리</b>가 나요!</p>
+      <p class="ukeLead">👉 손가락으로 줄을 누르면 <b class="red">빨간 부분</b>만 떨려요.<br><b class="red">빨간 줄이 짧을수록</b> <b>높은 소리</b>가 나요!</p>
       <div class="scrollX"><svg id="ukeSvg" class="pic" viewBox="0 0 720 250" role="group" aria-label="우쿨렐레 그림"></svg></div>
       <div class="ukeSteps" id="ukeSteps" role="group" aria-label="손가락 위치 고르기"></div>
       <p class="gameMsg" id="ukeMsg">위 버튼을 왼쪽부터 차례로 눌러 보세요. 줄이 점점 짧아져요!</p>
-      <h4>떨리는 줄 길이 비교</h4>
-      <div class="lbars" id="ukeFretBars"></div>
       <details class="more">
-        <summary>더 알아보기: 줄마다 굵기가 달라요</summary>
+        <summary>더 알아보기: 길이 비교 그래프 · 줄 굵기</summary>
+        <h4>떨리는 줄 길이 비교</h4>
+        <div class="lbars" id="ukeFretBars"></div>
+        <h4 style="margin-top:12px">줄마다 굵기가 달라요</h4>
         <p class="small">우쿨렐레 줄 4개는 길이가 모두 같아요. 그런데 <b>굵은 줄은 낮은 소리</b>, <b>가는 줄은 높은 소리</b>가 나요. 그림에서 줄을 직접 눌러 봐도 돼요.</p>
         <div class="lbars" id="ukeStrBars"></div>
       </details>
@@ -727,25 +734,31 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     <div class="inst" data-inst="rec">
       <div class="instHead"><h3>소프라노 리코더</h3><div class="hbtns"><button type="button" class="bigToggle">크게 보기</button></div></div>
       <div class="instNow"></div>
-      <p class="small"><b>구멍을 직접 눌러서</b> 막고 열 수 있어요(까만 구멍 = 막은 구멍). 그다음 <b>후~ 불기</b>를 누르고 있으면 소리가 나요. 불면서 구멍을 바꾸면 소리 높이도 바로 바뀌어요! 구멍을 많이 막을수록 <b>공기 기둥(파란 줄)이 길어져서 낮은 소리</b>가 나요.</p>
+      <p class="ukeLead">👉 손가락으로 구멍을 <b>많이 막을수록</b> <b class="blue">파란 줄(공기가 지나가는 길)</b>이 길어져서 <b>낮은 소리</b>가 나요!<br>구멍을 <b>조금 막을수록</b> 높은 소리가 나요.</p>
       <div class="scrollX"><svg id="recSvg" class="pic" viewBox="0 0 720 135" role="group" aria-label="리코더 그림: 구멍을 눌러 막고 열기"></svg></div>
-      <div class="line recCtl">
-        <button type="button" class="primary blow" id="recBlow">후~ 불기 (누르고 있기)</button>
-        <span class="recNow" id="recNow"></span>
-      </div>
-      <div class="line"><button type="button" id="recAllC">구멍 모두 막기</button><button type="button" id="recAllO">구멍 모두 열기</button></div>
-      <p class="small">학교에서 많이 쓰는 저먼식 운지로 나타냈어요. 리코더는 악보보다 한 옥타브 높은 소리가 나요.</p>
-      <div class="play">
-        <h4>🎯 손가락 문제</h4>
-        <div class="line"><button type="button" class="bigbtn" id="recQ">문제 내기</button><button type="button" class="bigbtn primary" id="recCheck" hidden>확인</button></div>
-        <p class="gameMsg" id="recMsg">문제 내기를 누르면 만들어 볼 계이름이 나와요.</p>
-      </div>
-      <h4>공기 기둥 길이 비교 (누르면 그 손가락 모양으로 바뀌어요)</h4>
-      <div class="lbars" id="recBars"></div>
-      <div class="play">
-        <div class="melHead"><h4>📈 내가 분 소리 그래프</h4><button type="button" class="melClear" data-inst="rec">지우기</button></div>
-        <canvas class="mel" data-inst="rec" aria-label="내가 분 리코더 소리의 높낮이 그래프"></canvas>
-      </div>
+      <div class="ukeSteps recSteps" id="recSteps" role="group" aria-label="막을 구멍 개수 고르기"></div>
+      <p class="gameMsg" id="recMsg2">위 버튼을 왼쪽부터 차례로 눌러 보세요. 막는 구멍이 하나씩 줄어들어요! 그림의 구멍을 직접 눌러도 돼요.</p>
+      <details class="more">
+        <summary>더 해 보기: 길게 불기 · 손가락 문제 · 소리 그래프</summary>
+        <div class="moreBody">
+          <div class="line recCtl">
+            <button type="button" class="primary blow" id="recBlow">후~ 불기 (누르고 있기)</button>
+            <span class="recNow" id="recNow"></span>
+          </div>
+          <p class="small">불기 버튼을 누르고 있는 채로 그림의 구멍을 바꿔 보세요. 소리 높이가 바로 바뀌어요!</p>
+          <div class="line"><button type="button" id="recAllC">구멍 모두 막기</button><button type="button" id="recAllO">구멍 모두 열기</button></div>
+          <div class="play">
+            <h4>🎯 손가락 문제</h4>
+            <div class="line"><button type="button" class="bigbtn" id="recQ">문제 내기</button><button type="button" class="bigbtn primary" id="recCheck" hidden>확인</button></div>
+            <p class="gameMsg" id="recMsg">문제 내기를 누르면 만들어 볼 계이름이 나와요.</p>
+          </div>
+          <div class="play">
+            <div class="melHead"><h4>📈 내가 분 소리 그래프</h4><button type="button" class="melClear" data-inst="rec">지우기</button></div>
+            <canvas class="mel" data-inst="rec" aria-label="내가 분 리코더 소리의 높낮이 그래프"></canvas>
+          </div>
+          <p class="small">학교에서 많이 쓰는 저먼식 운지로 나타냈어요. 리코더는 악보보다 한 옥타브 높은 소리가 나요.</p>
+        </div>
+      </details>
     </div>
 
     <!-- 글로켄슈필 -->
@@ -1639,7 +1652,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   mk("rect",{x:640,y:84,width:16,height:52,rx:3,class:"u-bridge"},uk);
   const STR=[{no:4,n:"솔",y:92,w:2.1},{no:3,n:"도",y:104,w:3.0},{no:2,n:"미",y:116,w:2.5},{no:1,n:"라",y:128,w:1.7}];
   STR.forEach(s=>{ s.f=hzOf(s.n,4); s.key="uke"+s.no;
-    s.path=mk("path",{d:`M${NUT} ${s.y} L${BR} ${s.y}`,class:"u-str","stroke-width":s.w,"data-key":s.key},uk); });
+    s.path=mk("path",{d:`M${NUT} ${s.y} L${BR} ${s.y}`,class:"u-str"+(s.no===1?"":" dim"),"stroke-width":s.w,"data-key":s.key},uk); });
   const act=mk("path",{class:"u-act",d:""},uk), finger=mk("circle",{r:9,cy:128,cx:0,class:"u-finger"},uk);
   const fLbl=mk("text",{y:160,"text-anchor":"middle",class:"u-fl"},uk); fLbl.textContent="손가락";
   const vLbl=mk("text",{y:76,"text-anchor":"middle",class:"u-fl"},uk);
@@ -1730,15 +1743,26 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     return it;
   }
   function playRec(it){
-    cl=new Set(it.cl); drawRec(); clearTimeout(airOff); air.classList.add("playing");
-    airOff=setTimeout(()=>{ if(!blowNode) air.classList.remove("playing"); },1300);
-    hear(it,1.3);
+    cl=new Set(it.cl); recSound(it,1.3);
+  }
+  // 소리 내고 쉬운 문장 보여 주기
+  let lastRec=null;
+  function recSound(it,dur){
+    drawRec(); clearTimeout(airOff); air.classList.add("playing");
+    airOff=setTimeout(()=>{ if(!blowNode) air.classList.remove("playing"); },dur*1000);
+    const n=[...cl].filter(x=>x>0).length;
+    let m=`구멍 ${n}개 막음 → ${it.name} ${Math.round(it.f)} Hz`;
+    if(lastRec && lastRec.f!==it.f) m+= it.f>lastRec.f ? " · 방금보다 파란 줄이 짧아져서 소리가 높아졌어요! ▲" : " · 방금보다 파란 줄이 길어져서 소리가 낮아졌어요! ▼";
+    else if(n===7) m+=" · 구멍을 모두 막아서 파란 줄이 가장 길어요. 가장 낮은 소리예요.";
+    lastRec=it; $("recMsg2").textContent=m;
+    document.querySelectorAll("#recSteps button").forEach(b=>b.classList.toggle("on",b.dataset.key===it.key && REC.some(r=>r.key===it.key&&same(r.cl,cl))));
+    hear(it,dur);
   }
   // 구멍 직접 누르기
   const hitG=mk("g",{},rs);
   [[150,114,0],...HX.map((x,i)=>[x,60,i+1])].forEach(([x,y,h])=>{
     const c=mk("circle",{cx:x,cy:y,r:h?26:22,class:"hit"},hitG);
-    clickable(c,(h?h+"번 구멍":"엄지 구멍")+" 막기 또는 열기",()=>{ cl.has(h)?cl.delete(h):cl.add(h); drawRec(); blowRetune(); });
+    clickable(c,(h?h+"번 구멍":"엄지 구멍")+" 막기 또는 열기",()=>{ cl.has(h)?cl.delete(h):cl.add(h); if(blowNode){ drawRec(); blowRetune(); } else recSound(noteFor(),0.9); });
   });
   // 불기 (누르고 있는 동안 소리)
   let blowNode=null, blowItem=null, wantBlow=false;
@@ -1780,7 +1804,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   let recTarget=null, recWrong=0;
   const fingerText=it=>{ const f=it.cl.filter(x=>x>0); return (it.cl.includes(0)?"엄지와 ":"")+f.join("·")+"번 구멍"; };
   $("recQ").addEventListener("click",()=>{
-    let it; do{ it=REC[Math.floor(Math.random()*REC.length)]; }while(recTarget && it===recTarget);
+    let it; do{ it=REC[Math.floor(Math.random()*7)]; }while(recTarget && it===recTarget);
     recTarget=it; recWrong=0; $("recCheck").hidden=false;
     $("recMsg").textContent=`‘${it.name}’${hasBatchim(it.name)?"을":"를"} 만들어 보세요! 구멍을 눌러 막고 연 다음 [확인]을 눌러요.`;
   });
@@ -1791,12 +1815,18 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
       playRec(recTarget); recTarget=null; $("recCheck").hidden=true;
     } else {
       recWrong++;
-      $("recMsg").textContent = recWrong<2 ? "조금 달라요. 다시 해 볼까요? 아래 막대를 누르면 정답 모양을 볼 수 있어요."
+      $("recMsg").textContent = recWrong<2 ? "조금 달라요. 다시 해 볼까요? 위쪽 큰 버튼을 누르면 정답 모양을 볼 수 있어요."
         : `힌트: ‘${recTarget.name}’${hasBatchim(recTarget.name)?"은":"는"} ${fingerText(recTarget)}을 막아요.`;
     }
   });
   drawRec();
-  makeBars($("recBars"), REC.map(it=>({key:it.key,name:it.name,f:it.f,len:it.end-AIR0,lenTxt:"",play:()=>playRec(it)})));
+  REC.slice(0,7).forEach(it=>{
+    const b=document.createElement("button"); b.type="button"; b.dataset.key=it.key;
+    b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=it.name.replace("낮은 ","");
+    b.querySelector("small").textContent=it.cl.filter(x=>x>0).length+"개 막기";
+    b.setAttribute("aria-label",it.name+", 구멍 "+it.cl.filter(x=>x>0).length+"개 막고 불기");
+    tap(b,()=>playRec(it)); $("recSteps").append(b);
+  });
 
   /* ===== 글로켄슈필 ===== */
   const gs=$("glkSvg"), GCOL=["#e8453c","#f28c28","#e6b800","#3fae49","#28a9e0","#3a5fd0","#8b4fc9","#e8453c"];
