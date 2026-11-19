@@ -344,8 +344,8 @@ body[data-mode="db"] #dbGraph{height:clamp(220px,38vh,400px)}
 .cardResult b{font-size:clamp(1.4rem,4.6vw,2rem)}
 .cardResult small{font-size:1rem;color:var(--muted)}
 .turnBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-weight:700}
-.turnN{display:flex;gap:6px}
-.turnN button{min-height:48px;min-width:64px;font-size:1.05rem;touch-action:manipulation}
+.turnN{display:flex;flex-wrap:wrap;gap:6px}
+.turnN button{min-height:48px;min-width:58px;font-size:1.05rem;touch-action:manipulation}
 .turnN button[aria-pressed="true"]{background:var(--btn);color:var(--btnInk);border-color:var(--btn)}
 .tool p.turnNow{font-size:clamp(1.3rem,4.4vw,1.8rem);font-weight:800;color:var(--z2);max-width:none}
 .memStars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
@@ -648,7 +648,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   <section class="panel tool" id="tool-card" hidden>
     <h2>🃏 카드 뽑기 도전</h2>
     <ol class="cardSteps"><li><b>카드 뽑기</b>를 눌러요.</li><li><b>도전!</b>을 누르고 진짜 악기로 소리를 내요.</li><li>측정기가 6초 동안 듣고 알려 줘요.</li></ol>
-    <div class="turnBar"><span>우리 모둠 인원</span><div class="turnN" id="turnN" role="group" aria-label="모둠 인원 고르기"><button type="button" data-n="4">4명</button><button type="button" data-n="5">5명</button><button type="button" data-n="6">6명</button></div></div>
+    <div class="turnBar"><span>우리 모둠 인원</span><div class="turnN" id="turnN" role="group" aria-label="모둠 인원 고르기"><button type="button" data-n="2">2명</button><button type="button" data-n="3">3명</button><button type="button" data-n="4">4명</button><button type="button" data-n="5">5명</button><button type="button" data-n="6">6명</button></div></div>
     <p class="turnNow" id="turnNow" aria-live="polite"></p>
     <div class="cardRow">
       <div class="pcard pInst" id="cardInst"><span class="ctop">악기 카드</span><div class="cpic" id="cardInstPic"><span class="cq">?</span></div><b id="cardInstName">&nbsp;</b></div>
@@ -2615,7 +2615,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   // 모둠 차례: 1번 친구부터 돌아가며
   let memN=4, memTurn=0, memDone=false, memWin=[];
   try{ memN=+(localStorage.getItem("memN")||4); }catch(e){}
-  if(![4,5,6].includes(memN)) memN=4;
+  if(![2,3,4,5,6].includes(memN)) memN=4;
   function memShow(){
     document.querySelectorAll("#turnN button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.n===memN)));
     $("turnNow").textContent="🙋 "+(memTurn+1)+"번 친구 차례예요!";
