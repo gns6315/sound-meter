@@ -314,6 +314,27 @@ body[data-mode="db"] #dbGraph{height:clamp(220px,38vh,400px)}
 .tool p.cardSentence{font-size:clamp(1.15rem,3.4vw,1.5rem);font-weight:800;color:var(--ink);max-width:none}
 .cardBtns .bigbtn{min-height:58px;font-size:1.08rem}
 .tool p.cardHintTxt{font-size:1.08rem;color:var(--ink);background:color-mix(in srgb,var(--z3) 16%,var(--panel));border-radius:10px;padding:10px 14px;max-width:none}
+.cardSteps{margin:0;padding-left:1.4em;font-size:1.05rem;line-height:1.7}
+.cardLive{display:grid;justify-items:center;gap:6px;padding:16px;border-radius:14px;background:var(--bg);text-align:center}
+.cardLive .cnum{font-family:var(--mono);font-size:clamp(3.4rem,12vw,5.5rem);line-height:1}
+.cardLive .ctrend{font-size:clamp(1.4rem,5vw,2.2rem);font-weight:800}
+.cardLive .ctrend.good{color:var(--z1)} .cardLive .ctrend.bad{color:var(--z4)}
+.cardLive .cardTime{width:100%}
+.cardResult{display:grid;justify-items:center;gap:6px;padding:18px;border-radius:14px;border:3px solid var(--z1);text-align:center;background:color-mix(in srgb,var(--z1) 10%,var(--panel))}
+.cardResult.no{border-color:var(--z3);background:color-mix(in srgb,var(--z3) 12%,var(--panel))}
+.cardResult .em{font-size:clamp(3rem,10vw,4.5rem);line-height:1}
+.cardResult b{font-size:clamp(1.4rem,4.6vw,2rem)}
+.cardResult small{font-size:1rem;color:var(--muted)}
+.turnBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-weight:700}
+.turnN{display:flex;gap:6px}
+.turnN button{min-height:48px;min-width:64px;font-size:1.05rem;touch-action:manipulation}
+.turnN button[aria-pressed="true"]{background:var(--btn);color:var(--btnInk);border-color:var(--btn)}
+.tool p.turnNow{font-size:clamp(1.3rem,4.4vw,1.8rem);font-weight:800;color:var(--z2);max-width:none}
+.memStars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.memStars span{padding:8px 10px;border-radius:10px;background:var(--bg);font-weight:700}
+.memStars span.now{outline:3px solid var(--z2)}
+#cardGo.ready{animation:pulse .9s ease-in-out infinite;box-shadow:0 0 0 4px var(--z1)}
+@media (prefers-reduced-motion:reduce){#cardGo.ready{animation:none}}
 .cardTime{height:12px;border-radius:999px;background:var(--grid);overflow:hidden}
 .cardTime i{display:block;height:100%;width:0;background:var(--z1)}
 #cardCv{width:100%;height:190px;background:var(--bg);border-radius:10px}
@@ -591,7 +612,9 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   <!-- 카드 뽑기 도전 (5차시) -->
   <section class="panel tool" id="tool-card" hidden>
     <h2>🃏 카드 뽑기 도전</h2>
-    <p>악기 카드와 소리 카드를 한 장씩 뽑아요. 카드에 나온 대로 <b>진짜 악기</b>로 소리를 내면, 측정기가 <b>6초 동안 듣고</b> 카드대로 됐는지 알려 줘요.</p>
+    <ol class="cardSteps"><li><b>카드 뽑기</b>를 눌러요.</li><li><b>도전!</b>을 누르고 진짜 악기로 소리를 내요.</li><li>측정기가 6초 동안 듣고 알려 줘요.</li></ol>
+    <div class="turnBar"><span>우리 모둠 인원</span><div class="turnN" id="turnN" role="group" aria-label="모둠 인원 고르기"><button type="button" data-n="4">4명</button><button type="button" data-n="5">5명</button><button type="button" data-n="6">6명</button></div></div>
+    <p class="turnNow" id="turnNow" aria-live="polite"></p>
     <div class="cardRow">
       <div class="pcard pInst" id="cardInst"><span class="ctop">악기 카드</span><div class="cpic" id="cardInstPic"><span class="cq">?</span></div><b id="cardInstName">&nbsp;</b></div>
       <div class="pcard pSnd" id="cardSnd"><span class="ctop">소리 카드</span><div class="cpic carrow" id="cardSndPic"><span class="cq">?</span></div><b id="cardSndName">&nbsp;</b></div>
@@ -604,10 +627,20 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
       <button type="button" class="bigbtn primary" id="cardGo" disabled>🎤 도전! (6초 듣기)</button>
     </div>
     <p class="cardHintTxt" id="cardHintTxt" hidden></p>
-    <div class="cardTime" id="cardTime" hidden><i id="cardTimeBar"></i></div>
+    <div class="cardLive" id="cardLive" hidden>
+      <b class="cnum" id="cardCount">3</b>
+      <span class="ctrend" id="cardTrend">준비!</span>
+      <div class="cardTime"><i id="cardTimeBar"></i></div>
+    </div>
+    <div class="cardResult" id="cardResult" hidden>
+      <span class="em" id="cardEm"></span>
+      <b id="cardResTxt"></b>
+      <small id="cardResNum"></small>
+      <button type="button" class="bigbtn" id="cardAgain">🔁 같은 카드로 다시</button>
+    </div>
     <canvas id="cardCv" aria-label="도전하는 동안 잰 소리 그래프"></canvas>
     <p class="cardMsg" id="cardMsg" aria-live="polite"></p>
-    <p class="cardScore" id="cardScore"></p>
+    <div id="cardScore"></div>
     <details class="more">
       <summary>📝 정리하기: 악기별로 소리 내는 방법</summary>
       <div class="cardSum" id="cardSum"></div>
@@ -2498,6 +2531,18 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   };
   const CARD_DUR=6000;
   let cardCur=null, cardRun=null, cardLast=null, cardWin=0, cardTry=0;
+  // 모둠 차례: 1번 친구부터 돌아가며
+  let memN=4, memTurn=0, memDone=false, memWin=[];
+  try{ memN=+(localStorage.getItem("memN")||4); }catch(e){}
+  if(![4,5,6].includes(memN)) memN=4;
+  function memShow(){
+    document.querySelectorAll("#turnN button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.n===memN)));
+    $("turnNow").textContent="🙋 "+(memTurn+1)+"번 친구 차례예요!";
+    const box=$("cardScore"); box.className="memStars"; box.textContent="";
+    for(let k=0;k<memN;k++){ const sp=document.createElement("span"); sp.textContent=(k+1)+"번 "+("⭐".repeat(memWin[k]||0)||"–"); if(k===memTurn) sp.className="now"; box.append(sp); }
+  }
+  document.querySelectorAll("#turnN button").forEach(b=>b.addEventListener("click",()=>{ memN=+b.dataset.n; if(memTurn>=memN) memTurn=0; try{ localStorage.setItem("memN",memN); }catch(e){} memShow(); }));
+  memShow();
   const cardDeck = () => Object.keys(CARD_SND).filter(k=> mode==="hz" ? CARD_SND[k].kind==="hz" : mode==="db" ? CARD_SND[k].kind==="db" : true);
   function cardShow(){
     const I=CARD_INST[cardCur.i], S=CARD_SND[cardCur.s];
@@ -2505,12 +2550,13 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     $("cardSndPic").textContent=S.icon; $("cardSndName").textContent=S.name;
     $("cardSentence").textContent="👉 "+I.name+"로 "+S.name+"!";   // 예) 칼림바로 세기를 점점 작게!
     $("cardHintTxt").hidden=true; $("cardHintTxt").textContent="💡 "+CARD_HINT[cardCur.i][cardCur.s];
-    $("cardHint").disabled=false; $("cardGo").disabled=false;
-    $("cardMsg").textContent=""; $("cardMsg").className="cardMsg";
+    $("cardHint").disabled=false; $("cardGo").disabled=false; $("cardGo").classList.add("ready");
+    $("cardMsg").textContent="이제 ‘도전!’을 누르세요."; $("cardMsg").className="cardMsg"; $("cardResult").hidden=true;
     cardRun=null; cardData=null; drawCard();
   }
   $("cardDraw").addEventListener("click",()=>{
     if(cardRun) return;
+    if(memDone){ memTurn=(memTurn+1)%memN; memDone=false; memShow(); }
     const deck=cardDeck(), insts=Object.keys(CARD_INST);
     let n, tries=0;
     do{ n={i:insts[Math.floor(Math.random()*insts.length)], s:deck[Math.floor(Math.random()*deck.length)]}; tries++; }
@@ -2520,16 +2566,18 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     ["cardInst","cardSnd"].forEach(id=>{ const el=$(id); el.classList.remove("flip"); void el.offsetWidth; if(!reduce) el.classList.add("flip"); });
     if(reduce) cardShow(); else setTimeout(cardShow,220);
   });
+  $("cardAgain").addEventListener("click",()=>$("cardGo").click());
   $("cardHint").addEventListener("click",()=>{ $("cardHintTxt").hidden=!$("cardHintTxt").hidden; $("cardHint").textContent=$("cardHintTxt").hidden?"💡 힌트 보기":"💡 힌트 숨기기"; });
   $("cardGo").addEventListener("click",async()=>{
     if(!cardCur || cardRun) return;
     if(!running) await start();
     if(!running){ $("cardMsg").textContent="마이크를 ‘허용’해야 들을 수 있어요."; return; }
-    ["cardGo","cardDraw"].forEach(id=>$(id).disabled=true);
-    $("cardMsg").className="cardMsg"; cardData=null; drawCard();
-    for(const n of [3,2,1]){ $("cardMsg").textContent=n+"… 악기를 준비해요!"; await new Promise(r=>setTimeout(r,700)); }
-    $("cardMsg").textContent="시작! "+CARD_SND[cardCur.s].name+"!";
-    $("cardTime").hidden=false;
+    ["cardGo","cardDraw"].forEach(id=>$(id).disabled=true); $("cardGo").classList.remove("ready");
+    $("cardMsg").className="cardMsg"; $("cardMsg").textContent=""; $("cardResult").hidden=true; cardData=null; drawCard();
+    $("cardLive").hidden=false; $("cardTimeBar").style.width="0"; $("cardTrend").className="ctrend";
+    $("cardLive").scrollIntoView({behavior:"smooth",block:"center"});
+    for(const n of [3,2,1]){ $("cardCount").textContent=n; $("cardTrend").textContent="악기를 준비해요!"; await new Promise(r=>setTimeout(r,700)); }
+    $("cardCount").textContent="시작!"; $("cardTrend").textContent=CARD_SND[cardCur.s].name+"!";
     cardRun={t0:performance.now(), hz:[], db:[]};
   });
 
@@ -2543,28 +2591,43 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     }
     $("cardTimeBar").style.width=Math.min(100,t/CARD_DUR*100)+"%";
     const left=Math.ceil(Math.max(0,(CARD_DUR-t)/1000));
-    if(t<CARD_DUR){ $("cardMsg").textContent=left+"초 · "+CARD_SND[cardCur.s].name+"!"; drawCard(); return; }
+    if(t<CARD_DUR){ if(t>500) $("cardCount").textContent=left; cardLiveTrend(t); drawCard(); return; }
     cardFinish();
+  }
+  function cardLiveTrend(t){
+    const S=CARD_SND[cardCur.s], el=$("cardTrend");
+    if(t<1600){ el.textContent=S.name+"!"; el.className="ctrend"; return; }
+    let d=null, word;
+    if(S.kind==="db"){
+      const a=cardRun.db.filter(p=>p.t<1500).map(p=>p.v), b=cardRun.db.filter(p=>p.t>t-1300).map(p=>p.v);
+      if(a.length>5 && b.length>5){ d=cardPct(b,.9)-cardPct(a,.9); word = d>=3 ? ["⬆ 점점 커지고 있어요",1] : d<=-3 ? ["⬇ 점점 작아지고 있어요",-1] : ["➡ 아직 세기가 비슷해요",0]; }
+    } else {
+      const a=cardRun.hz.filter(p=>p.t<1800).map(p=>p.v), b=cardRun.hz.filter(p=>p.t>t-1200).map(p=>p.v);
+      if(a.length>2 && b.length>2){ d=1200*Math.log2(cardPct(b,.5)/cardPct(a,.5)); word = d>=100 ? ["⬆ 점점 높아지고 있어요",1] : d<=-100 ? ["⬇ 점점 낮아지고 있어요",-1] : ["➡ 아직 높이가 비슷해요",0]; }
+    }
+    if(d==null){ el.textContent="🎵 소리를 내 주세요!"; el.className="ctrend"; return; }
+    el.textContent=word[0]+(word[1]===S.dir?" 👍":"");
+    el.className="ctrend "+(word[1]===S.dir?"good":word[1]===-S.dir?"bad":"");
   }
   const cardPct=(a,q)=>{ const s=[...a].sort((x,y)=>x-y); return s[Math.min(s.length-1,Math.floor(q*(s.length-1)))]; };
   function cardThirds(arr,q,minN){
     return [0,1,2].map(k=>{ const a=arr.filter(p=>p.t>=k*CARD_DUR/3 && p.t<(k+1)*CARD_DUR/3).map(p=>p.v); return a.length>=minN ? cardPct(a,q) : null; });
   }
   function cardFinish(){
-    const run=cardRun; cardRun=null; $("cardTime").hidden=true; $("cardTimeBar").style.width="0";
+    const run=cardRun; cardRun=null; $("cardLive").hidden=true; $("cardTimeBar").style.width="0";
     ["cardGo","cardDraw"].forEach(id=>$(id).disabled=false);
     const S=CARD_SND[cardCur.s], I=CARD_INST[cardCur.i], hint=CARD_HINT[cardCur.i][cardCur.s];
-    let ok=false, msg="";
+    let ok=false, msg="", num="";
     if(S.kind==="db"){
       const th=cardThirds(run.db,0.9,8);               // 각 구간에서 가장 크게 난 소리 쪽(상위 10%)
       cardData={kind:"db", pts:run.db, th};
       const a=th[0], b=th[2];
       if(a==null||b==null){ msg="소리를 잘 못 들었어요. 기기 가까이에서 다시 해 볼까요?"; }
       else{
-        const d=b-a;
-        if(S.dir*d>=4){ ok=true; msg="성공! 소리가 점점 "+(S.dir>0?"커졌어요":"작아졌어요")+" ("+Math.round(a)+" → "+Math.round(b)+" dB) 🎉"; }
-        else if(Math.abs(d)<4) msg="세기가 거의 그대로예요 ("+Math.round(a)+" → "+Math.round(b)+" dB). 차이를 더 크게 내 봐요!";
-        else msg="앗, 반대로 소리가 점점 "+(d>0?"커졌어요":"작아졌어요")+" ("+Math.round(a)+" → "+Math.round(b)+" dB). 다시 해 볼까요?";
+        const d=b-a; num="처음 "+Math.round(a)+" dB → 끝 "+Math.round(b)+" dB (데시벨)";
+        if(S.dir*d>=3){ ok=true; msg="소리가 점점 "+(S.dir>0?"커졌어요!":"작아졌어요!"); }
+        else if(Math.abs(d)<3) msg="세기가 거의 그대로예요. 더 확실하게 바꿔 봐요!";
+        else msg="반대로 점점 "+(d>0?"커졌어요!":"작아졌어요!")+" 거꾸로 해 봐요.";
       }
     } else {
       const th=cardThirds(run.hz,0.5,4);               // 각 구간의 가운데 높낮이
@@ -2573,16 +2636,18 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
       if(have.length<2){ msg="높낮이를 잘 못 잡았어요. 악기 소리를 또렷하게, 기기 가까이에서 내 봐요."; }
       else{
         const a=th[have[0]], b=th[have[have.length-1]], c=1200*Math.log2(b/a);
-        const ab=" ("+Math.round(a)+" Hz "+noteKo(a)+" → "+Math.round(b)+" Hz "+noteKo(b)+")";
-        if(S.dir*c>=150){ ok=true; msg="성공! 소리가 점점 "+(S.dir>0?"높아졌어요":"낮아졌어요")+ab+" 🎉"; }
-        else if(Math.abs(c)<150) msg="높낮이가 거의 그대로예요"+ab+". 다른 "+(cardCur.i==="glk"?"음판":cardCur.i==="kal"?"건반":"칸")+"으로 옮겨 가며 내 봐요!";
-        else msg="앗, 반대로 소리가 점점 "+(c>0?"높아졌어요":"낮아졌어요")+ab+". 순서를 거꾸로 해 볼까요?";
+        num="처음 "+Math.round(a)+" Hz ("+noteKo(a)+") → 끝 "+Math.round(b)+" Hz ("+noteKo(b)+")";
+        if(S.dir*c>=100){ ok=true; msg="소리가 점점 "+(S.dir>0?"높아졌어요!":"낮아졌어요!"); }
+        else if(Math.abs(c)<100) msg="높이가 거의 그대로예요. 다른 "+(cardCur.i==="glk"?"음판":cardCur.i==="kal"?"건반":"칸")+"으로 옮겨 가며 내 봐요!";
+        else msg="반대로 점점 "+(c>0?"높아졌어요!":"낮아졌어요!")+" 순서를 거꾸로 해 봐요.";
       }
     }
-    cardTry++; if(ok) cardWin++;
-    $("cardMsg").textContent=msg; $("cardMsg").className="cardMsg "+(ok?"ok":"no");
+    cardTry++; if(ok){ cardWin++; memWin[memTurn]=(memWin[memTurn]||0)+1; } memDone=true;
+    $("cardMsg").textContent=""; $("cardResult").hidden=false; $("cardResult").className="cardResult"+(ok?"":" no");
+    $("cardEm").textContent=ok?"🎉":"🔁"; $("cardResTxt").textContent=(ok?"성공! ":"")+msg; $("cardResNum").textContent=num;
+    $("cardResult").scrollIntoView({behavior:"smooth",block:"center"});
     if(!ok){ $("cardHintTxt").hidden=false; $("cardHint").textContent="💡 힌트 숨기기"; }
-    $("cardScore").textContent="⭐ 지금까지 "+cardTry+"번 도전해서 "+cardWin+"번 성공!";
+    memShow(); $("turnNow").textContent="다 했으면 ‘카드 뽑기’를 눌러 다음 친구에게 넘겨요!";
     drawCard();
   }
   function drawCard(){
