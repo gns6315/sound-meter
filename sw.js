@@ -1,5 +1,5 @@
 // 인터넷이 잠깐 끊겨도 열리도록 저장해 두기 (새 버전이 있으면 인터넷에서 먼저 받아요)
-const C="sound-meter-v7";
+const C="sound-meter-v8";
 const FILES=["./","index.html","manifest.webmanifest","icon-192.png","icon-512.png","icon-180.png"];
 self.addEventListener("install",e=>{ e.waitUntil(caches.open(C).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())); });
 self.addEventListener("activate",e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });

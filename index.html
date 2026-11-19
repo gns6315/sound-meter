@@ -120,7 +120,25 @@ td.empty{color:var(--muted);text-align:center;padding:16px}
 .pill.lo{background:color-mix(in srgb,var(--trace) 16%,transparent);color:var(--trace)}
 .pill.big2{background:color-mix(in srgb,var(--loud) 18%,transparent);color:var(--loud)}
 .pill.sm{background:color-mix(in srgb,var(--z1) 16%,transparent);color:var(--z1)}
-.rec p.recNote{color:var(--ink);font-weight:600}
+.rec p.recNote{color:var(--ink);font-weight:700;font-size:1.05rem}
+.rec h2{font-size:1.15rem}
+.recOrder{margin:0;padding-left:1.4em;font-size:1.05rem;line-height:1.7}
+.grpBtns{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.grpBtns button{min-height:54px;font-size:1.05rem;padding:8px 4px;touch-action:manipulation}
+.grpBtns button[aria-pressed="true"]{background:var(--z2);border-color:var(--z2);color:#fff}
+@media (max-width:520px){.grpBtns{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.recTiles{display:grid;gap:8px}
+.recTiles h4{margin:6px 0 0;font-size:1rem}
+.recTileRow{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.recTile{display:grid;gap:2px;justify-items:center;text-align:center;min-height:78px;padding:10px 6px;border-radius:12px;border-width:2px;touch-action:manipulation}
+.recTile small{font-size:.85rem;color:var(--muted);font-weight:700}
+.recTile b{font-size:1.1rem}
+.recTile i{font-style:normal;font-size:.78rem;color:var(--z1);min-height:1em}
+.recTile.flash{background:var(--z1);border-color:var(--z1);color:#fff}
+.recTile.flash small,.recTile.flash i{color:#fff}
+.rec p.recFlash{font-size:1.1rem;font-weight:800;color:var(--z1);min-height:1.4em}
+.rec p.recFlash.no{color:var(--z4)}
+.rec .tbl table{font-size:1rem}
 
 .tone{padding:14px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .tone h2{width:100%}
@@ -762,7 +780,12 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   </section>
 
   <section class="panel rec" id="recSec">
-    <h2>실험 기록</h2>
+    <h2>📋 실험 기록</h2>
+    <ol class="recOrder"><li>우리 <b>모둠 번호</b>를 눌러요.</li><li>악기로 소리를 내요.</li><li>소리가 끝나자마자 아래에서 <b>내가 낸 소리 버튼</b>을 눌러요.</li></ol>
+    <div class="grpBtns" id="grpBtns" role="group" aria-label="우리 모둠 고르기"></div>
+    <div class="recTiles" id="recTiles"></div>
+    <p class="recFlash" id="recFlash" aria-live="polite"></p>
+    <div hidden>
     <p id="recIntro"></p>
     <div class="rec-row">
       <div class="field">
@@ -775,10 +798,6 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
           <optgroup label="높낮이 비교 (4차시)">
             <option>칼림바 · 가장 짧은 건반</option>
             <option>칼림바 · 가장 긴 건반</option>
-            <option>우쿨렐레 · 줄을 짧게 잡고</option>
-            <option>우쿨렐레 · 줄을 길게 잡고</option>
-            <option>플라스틱 자 · 조금 내밀고</option>
-            <option>플라스틱 자 · 길게 내밀고</option>
             <option>글로켄슈필 · 짧은 음판</option>
             <option>글로켄슈필 · 긴 음판</option>
             <option>목소리 · 높게</option>
@@ -801,18 +820,22 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
         </select>
       </div>
       <button class="primary" id="recBtn" type="button">지금 소리 기록</button>
-      <button id="recUndo" type="button">마지막 기록 지우기</button>
     </div>
+    </div>
+    <div class="line"><button id="recUndo" type="button">↩ 방금 기록 지우기</button></div>
     <div class="tbl"><table>
       <thead><tr><th>측정한 것</th><th class="need-hz">높낮이 평균<br>Hz (헤르츠)</th><th class="need-db">세기 평균<br>dB (데시벨)</th><th>결과</th></tr></thead>
       <tbody id="recBody"><tr><td colspan="4" class="empty">아직 기록이 없어요.</td></tr></tbody>
     </table></div>
     <p class="recNote" id="recNote"></p>
-    <div class="line">
-      <button type="button" id="recCopy">표 복사하기 (한글·엑셀에 붙여 넣기)</button>
-      <button type="button" id="recCsv">모든 모둠 기록을 엑셀 파일로 저장</button>
-      <span class="say" id="recSaveMsg"></span>
-    </div>
+    <details class="more">
+      <summary>선생님용: 표 복사 · 엑셀 파일 저장</summary>
+      <div class="line" style="padding-top:6px">
+        <button type="button" id="recCopy">표 복사하기 (한글·엑셀에 붙여 넣기)</button>
+        <button type="button" id="recCsv">모든 모둠 기록을 엑셀 파일로 저장</button>
+        <span class="say" id="recSaveMsg"></span>
+      </div>
+    </details>
   </section>
 
   <section class="panel tone">
@@ -1438,7 +1461,31 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   const myRecords = () => records.filter(r=>(r.group||"")===curGroup());   // 표에는 지금 모둠의 기록만
   try{ $("groupName").value=localStorage.getItem("groupName")||""; }catch(e){}
   $("groupName").addEventListener("input",()=>{ try{ localStorage.setItem("groupName",$("groupName").value); }catch(e){} renderRecords(); });
+  function renderRecTiles(){
+    const box=$("recTiles"); box.textContent="";
+    [...recSel.querySelectorAll("optgroup")].forEach(g=>{
+      const h=document.createElement("h4"); h.textContent=g.label.replace(/^높낮이/,"🎵 높낮이").replace(/^세기/,"🔊 세기").replace(/^따로따로/,"🔀 따로따로"); box.append(h);
+      const row=document.createElement("div"); row.className="recTileRow";
+      [...g.children].forEach(o=>{
+        const [inst,how]=o.value.split(" · ");
+        const b=document.createElement("button"); b.type="button"; b.className="recTile"; b.dataset.what=o.value;
+        b.innerHTML="<small></small><b></b><i></i>"; b.querySelector("small").textContent=inst; b.querySelector("b").textContent=how;
+        const n=myRecords().filter(r=>r.what===o.value).length; b.querySelector("i").textContent=n? "✔ "+n+"번 기록":"";
+        b.setAttribute("aria-label",o.value+" 지금 소리 기록하기");
+        b.addEventListener("click",()=>{ recSel.value=o.value; $("recBtn").click(); });
+        row.append(b);
+      });
+      box.append(row);
+    });
+  }
+  function renderGrpBtns(){
+    const box=$("grpBtns"); if(!box.children.length){
+      for(let k=1;k<=6;k++){ const b=document.createElement("button"); b.type="button"; b.textContent=k+"모둠"; b.addEventListener("click",()=>{ $("groupName").value=k+"모둠"; $("groupName").dispatchEvent(new Event("input")); $("recFlash").textContent=""; }); box.append(b); }
+    }
+    [...box.children].forEach(b=>b.setAttribute("aria-pressed",String(b.textContent===curGroup())));
+  }
   function renderRecords(){
+    renderGrpBtns(); renderRecTiles();
     const body=$("recBody"); body.textContent="";
     const groups=new Map();
     myRecords().forEach(r=>{ if(!groups.has(r.what)) groups.set(r.what,{fs:[],dbs:[]}); const g=groups.get(r.what); if(r.f) g.fs.push(r.f); g.dbs.push(r.db); });
@@ -1505,17 +1552,26 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     $("recNote").textContent=notes.join("  ");
   }
   $("recBtn").addEventListener("click",()=>{
-    if(!running){ $("recNote").textContent="먼저 측정 시작을 누르고 소리를 내 주세요."; return; }
+    const fl=$("recFlash");
+    if(!curGroup()){ fl.textContent="먼저 위에서 우리 모둠 번호를 눌러요!"; fl.className="recFlash no"; return; }
+    if(!running){ fl.textContent="먼저 맨 위의 🎤 측정 시작을 누르고 소리를 내 주세요."; fl.className="recFlash no"; return; }
     const now=performance.now();
     const d=new Date(), pad=n=>String(n).padStart(2,"0");
     records.push({group:curGroup(), what:$("recWhat").value, f:(heldF && now-lastSeen<3000)? heldF : null, db:peakDb(1500), time:pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())});
     renderRecords();
+    const r=records[records.length-1];
+    if(mode!=="db" && !r.f && !/세게|약하게|크게|작게/.test(r.what)){ fl.textContent="⚠ 높낮이를 못 잡았어요. 소리를 내고 바로 눌러 주세요. (이 기록은 지워도 돼요)"; fl.className="recFlash no"; }
+    else { fl.textContent="✔ "+r.what+" 기록했어요!"+(mode!=="db"&&r.f?"  "+Math.round(r.f)+" Hz":"")+(mode!=="hz"?"  "+Math.round(r.db)+" dB":""); fl.className="recFlash"; }
+    const t=[...document.querySelectorAll(".recTile")].find(b=>b.dataset.what===r.what);
+    if(t){ t.classList.add("flash"); setTimeout(()=>t.classList.remove("flash"),700); }
   });
   $("recUndo").addEventListener("click",()=>{
+    $("recFlash").textContent="방금 기록을 지웠어요."; $("recFlash").className="recFlash";
     for(let i=records.length-1;i>=0;i--){ if((records[i].group||"")===curGroup()){ records.splice(i,1); break; } }
     renderRecords();
   });
 
+  renderRecords();
   /* ---------- 기준음 ---------- */
   let osc=null, gain=null;
   const sliderToHz = v => Math.round(30*Math.pow(5000/30, v/1000));
@@ -2553,6 +2609,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     uke:{up:"줄을 처음엔 살짝, 갈수록 점점 세게 튕겨요.", down:"줄을 처음엔 세게, 갈수록 점점 약하게 튕겨요.",
          hi:"줄을 누르는 손가락을 몸통 쪽으로 한 칸씩 옮기면서 튕겨요. 떨리는 줄이 점점 짧아져요.", lo:"줄을 누르는 손가락을 머리 쪽으로 한 칸씩 옮기면서 튕겨요. 떨리는 줄이 점점 길어져요."}
   };
+  delete CARD_INST.uke;   // 교실에 있는 악기: 칼림바, 글로켄슈필(실로폰)
   const CARD_DUR=6000;
   let cardCur=null, cardRun=null, cardLast=null, cardWin=0, cardTry=0;
   // 모둠 차례: 1번 친구부터 돌아가며
@@ -2570,7 +2627,7 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   const cardDeck = () => Object.keys(CARD_SND).filter(k=> mode==="hz" ? CARD_SND[k].kind==="hz" : mode==="db" ? CARD_SND[k].kind==="db" : true);
   function cardShow(){
     const I=CARD_INST[cardCur.i], S=CARD_SND[cardCur.s];
-    $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name;
+    $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name+(cardCur.i==="glk"?" (실로폰)":"");
     $("cardSndPic").textContent=S.icon; $("cardSndName").textContent=S.name;
     $("cardSentence").textContent="👉 "+I.name+"로 "+S.name+"!";   // 예) 칼림바로 세기를 점점 작게!
     $("cardHintTxt").hidden=true; $("cardHintTxt").textContent="💡 "+CARD_HINT[cardCur.i][cardCur.s];
