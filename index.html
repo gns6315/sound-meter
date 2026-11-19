@@ -235,6 +235,19 @@ svg.pic .hit{cursor:pointer}
 .g-bar.next{stroke:var(--z1);stroke-width:7;animation:pulse .9s ease-in-out infinite}
 @keyframes pulse{50%{filter:brightness(1.3)}}
 @media (prefers-reduced-motion:reduce){.kalimba button.next,.g-bar.next{animation:none}}
+.ukeLead{margin:0;font-size:1.1rem !important;color:var(--ink) !important;line-height:1.6;max-width:none !important}
+.ukeLead .red{color:var(--z4)}
+.ukeSteps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.ukeSteps button{display:grid;gap:2px;justify-items:center;padding:10px 4px;min-height:64px;border-radius:12px;font-size:1rem;touch-action:manipulation}
+.ukeSteps button small{font-weight:600;font-size:.78rem;color:var(--muted)}
+.ukeSteps button.on{background:var(--z4);border-color:var(--z4);color:#fff}
+.ukeSteps button.on small{color:#fff}
+@media (max-width:560px){.ukeSteps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+details.more{border:1px solid var(--line);border-radius:10px;padding:0 12px}
+details.more summary{cursor:pointer;padding:12px 0;font-weight:700}
+details.more[open]{padding-bottom:12px}
+details.more .lbars{margin-top:8px}
+.u-fl{font:700 15px var(--sans);fill:var(--z4)}
 .refgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 table.ref{min-width:0}
 table.ref td{padding:6px 8px}
@@ -697,11 +710,17 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     <div class="inst" data-inst="uke">
       <div class="instHead"><h3>우쿨렐레</h3><div class="hbtns"><button type="button" class="bigToggle">크게 보기</button></div></div>
       <div class="instNow"></div>
+      <p class="ukeLead">👉 손가락으로 줄을 누르면 <b class="red">빨간 부분</b>만 떨려요.<br><b>떨리는 줄이 짧을수록 높은 소리</b>가 나요!</p>
       <div class="scrollX"><svg id="ukeSvg" class="pic" viewBox="0 0 720 250" role="group" aria-label="우쿨렐레 그림"></svg></div>
-      <div class="refgrid">
-        <div><h4>줄 4개 그냥 튕기기 · 줄 굵기 비교</h4><p class="small">네 줄의 길이는 모두 같아요. <b>굵은 줄일수록 낮은 소리</b>가 나요.</p><div class="lbars" id="ukeStrBars"></div></div>
-        <div><h4>1번 줄을 잡는 칸 · 울리는 길이 비교</h4><p class="small">손가락으로 잡으면 울리는 부분(빨간 줄)이 <b>짧아져서 높은 소리</b>가 나요.</p><div class="lbars" id="ukeFretBars"></div></div>
-      </div>
+      <div class="ukeSteps" id="ukeSteps" role="group" aria-label="손가락 위치 고르기"></div>
+      <p class="gameMsg" id="ukeMsg">위 버튼을 왼쪽부터 차례로 눌러 보세요. 줄이 점점 짧아져요!</p>
+      <h4>떨리는 줄 길이 비교</h4>
+      <div class="lbars" id="ukeFretBars"></div>
+      <details class="more">
+        <summary>더 알아보기: 줄마다 굵기가 달라요</summary>
+        <p class="small">우쿨렐레 줄 4개는 길이가 모두 같아요. 그런데 <b>굵은 줄은 낮은 소리</b>, <b>가는 줄은 높은 소리</b>가 나요. 그림에서 줄을 직접 눌러 봐도 돼요.</p>
+        <div class="lbars" id="ukeStrBars"></div>
+      </details>
     </div>
 
     <!-- 리코더 -->
@@ -1617,41 +1636,57 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   mk("rect",{x:NUT-5,y:82,width:6,height:56,class:"u-nut"},uk);
   for(let n=1;n<=15;n++) mk("line",{x1:fx(n),y1:84,x2:fx(n),y2:136,class:"u-fret"},uk);
   [5,7,10].forEach(n=>mk("circle",{cx:mid(n),cy:110,r:4.5,class:"u-dot"},uk));
-  [3,5,7,10].forEach(n=>{ mk("text",{x:mid(n),y:76,"text-anchor":"middle",class:"u-lbl"},uk).textContent=n+"칸"; });
   mk("rect",{x:640,y:84,width:16,height:52,rx:3,class:"u-bridge"},uk);
   const STR=[{no:4,n:"솔",y:92,w:2.1},{no:3,n:"도",y:104,w:3.0},{no:2,n:"미",y:116,w:2.5},{no:1,n:"라",y:128,w:1.7}];
   STR.forEach(s=>{ s.f=hzOf(s.n,4); s.key="uke"+s.no;
     s.path=mk("path",{d:`M${NUT} ${s.y} L${BR} ${s.y}`,class:"u-str","stroke-width":s.w,"data-key":s.key},uk); });
-  const act=mk("path",{class:"u-act",d:""},uk), finger=mk("circle",{r:8,cy:128,cx:0,class:"u-finger"},uk);
+  const act=mk("path",{class:"u-act",d:""},uk), finger=mk("circle",{r:9,cy:128,cx:0,class:"u-finger"},uk);
+  const fLbl=mk("text",{y:160,"text-anchor":"middle",class:"u-fl"},uk); fLbl.textContent="손가락";
+  const vLbl=mk("text",{y:76,"text-anchor":"middle",class:"u-fl"},uk);
   const meas=mk("line",{y1:226,y2:226,x2:BR,class:"u-meas"},uk), mt1=mk("line",{y1:218,y2:234,class:"u-meas"},uk);
   mk("line",{x1:BR,x2:BR,y1:218,y2:234,class:"u-meas"},uk);
   const mtxt=mk("text",{y:246,"text-anchor":"middle",class:"u-mt"},uk);
-  const FRETS=[[0,"라",4,"그냥"],[3,"도",5,"3칸"],[5,"레",5,"5칸"],[7,"미",5,"7칸"],[10,"솔",5,"10칸"]].map(([n,nm,o,lab])=>({n,nm,f:hzOf(nm,o),lab,cm:CM*Math.pow(2,-n/12)}));
+  const FRETS=[[0,"라",4,"가장 길게"],[3,"도",5,"조금 짧게"],[5,"레",5,"더 짧게"],[7,"미",5,"많이 짧게"],[10,"솔",5,"가장 짧게"]].map(([n,nm,o,lab])=>({n,nm,f:hzOf(nm,o),lab,cm:CM*Math.pow(2,-n/12)}));
   let ukeFret=0;
   function setFret(n){
     ukeFret=n; vib.delete(act);
     const x=n?fx(n):NUT;
-    act.setAttribute("d",`M${x} 128 L${BR} 128`); act.style.visibility=n?"visible":"hidden";
+    act.setAttribute("d",`M${x} 128 L${BR} 128`); act.style.visibility="visible";
     finger.setAttribute("cx",mid(n)); finger.style.visibility=n?"visible":"hidden";
+    fLbl.setAttribute("x",mid(n)); fLbl.style.visibility=n?"visible":"hidden";
+    vLbl.setAttribute("x",(x+BR)/2-60); vLbl.textContent="";
+    document.querySelectorAll("#ukeSteps button").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));
     meas.setAttribute("x1",x); mt1.setAttribute("x1",x); mt1.setAttribute("x2",x);
-    mtxt.setAttribute("x",(x+BR)/2); mtxt.textContent="1번 줄이 울리는 길이 약 "+Math.round(CM*Math.pow(2,-n/12))+" cm";
+    mtxt.setAttribute("x",(x+BR)/2); mtxt.textContent="떨리는 길이 약 "+Math.round(CM*Math.pow(2,-n/12))+" cm";
   }
   function playStr(s){
     if(s.no===1) setFret(0);
-    shake(s.path,NUT,BR,s.y,s.f);
+    shake(s.no===1?act:s.path,NUT,BR,s.y,s.f);
     hear({key:s.key,inst:"uke",label:"우쿨렐레 · "+s.no+"번 줄 그냥 튕기기",name:s.n,f:s.f,kind:"pluck"});
   }
   function playFret(it){
     setFret(it.n);
-    if(it.n) shake(act,fx(it.n),BR,128,it.f); else shake(STR[3].path,NUT,BR,128,it.f);
-    hear({key:"fret"+it.n,inst:"uke",label:"우쿨렐레 · 1번 줄 "+(it.n?it.n+"번째 칸 잡기":"그냥 튕기기"),name:it.nm,f:it.f,kind:"pluck"});
+    shake(act,it.n?fx(it.n):NUT,BR,128,it.f);
+    const prev=lastFret; lastFret=it;
+    let m=`떨리는 길이 약 ${Math.round(it.cm)} cm → ${Math.round(it.f)} Hz`;
+    if(prev && prev!==it) m+= it.cm<prev.cm ? " · 방금보다 줄이 짧아져서 소리가 높아졌어요! ▲" : " · 방금보다 줄이 길어져서 소리가 낮아졌어요! ▼";
+    else if(!it.n) m+=" · 가장 긴 줄이라 가장 낮은 소리예요.";
+    $("ukeMsg").textContent=m;
+    hear({key:"fret"+it.n,inst:"uke",label:"우쿨렐레 · 줄 "+it.lab+" 누르기",name:it.nm,f:it.f,kind:"pluck"});
   }
+  let lastFret=null;
+  FRETS.forEach((it,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.dataset.n=it.n;
+    b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=(i+1)+". "+it.lab; b.querySelector("small").textContent=Math.round(it.cm)+" cm";
+    b.setAttribute("aria-label","줄을 "+it.lab+" 누르고 튕기기, 떨리는 길이 약 "+Math.round(it.cm)+" 센티미터");
+    tap(b,()=>playFret(it)); $("ukeSteps").append(b);
+  });
   STR.forEach(s=>{ const r=mk("rect",{x:NUT,y:s.y-6,width:SC,height:12,class:"hit"},uk);
     clickable(r,s.no+"번 줄 튕기기",()=> s.no===1 ? playFret(FRETS.find(x=>x.n===ukeFret)) : playStr(s)); });
   setFret(0);
   makeBars($("ukeStrBars"), [...STR].sort((a,b)=>a.f-b.f).map(s=>({key:s.key,name:s.no+"번 줄 "+s.n,f:s.f,len:s.w,
     lenTxt:s.w>=2.9?"가장 굵어요":s.w<=1.8?"가장 가늘어요":"",play:()=>playStr(s)})));
-  makeBars($("ukeFretBars"), FRETS.map(it=>({key:"fret"+it.n,name:it.lab+(it.n?" 잡기":" 튕기기"),f:it.f,len:it.cm,
+  makeBars($("ukeFretBars"), FRETS.map(it=>({key:"fret"+it.n,name:it.lab,f:it.f,len:it.cm,
     lenTxt:Math.round(it.cm)+" cm",play:()=>playFret(it)})));
 
   /* ===== 소프라노 리코더 (저먼식): 0 = 엄지 구멍, 1~7 = 앞 구멍 ===== */
