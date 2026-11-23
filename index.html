@@ -375,6 +375,29 @@ body[data-mode="db"] #dbGraph{height:clamp(220px,38vh,400px)}
 @keyframes conf{to{transform:translate(var(--dx),260px) rotate(200deg);opacity:0}}
 .memStars .tot{grid-column:1/-1;text-align:center;background:color-mix(in srgb,var(--z3) 16%,var(--panel))}
 .memStars .tot.all{background:var(--z1);color:#fff;font-size:1.15rem}
+#tool-card .cardRow{max-width:none;gap:clamp(10px,2.4vw,22px)}
+#tool-card .pcard{min-height:clamp(230px,36vh,340px);padding:clamp(14px,2.4vw,22px) 12px;gap:clamp(8px,1.6vh,14px);border-width:4px;border-radius:22px;align-content:center;cursor:pointer}
+#tool-card .pcard .ctop{font-size:clamp(.95rem,2.4vw,1.2rem);padding:4px 18px}
+#tool-card .pcard .cpic{height:clamp(110px,18vh,170px)}
+#tool-card .pcard .cpic svg{height:clamp(110px,18vh,170px)}
+#tool-card .pcard .cq{font-size:clamp(4rem,10vw,6rem)}
+#tool-card .pcard .carrow{font-size:clamp(3.6rem,9vw,5.4rem)}
+#tool-card .pcard b{font-size:clamp(1.5rem,4.6vw,2.4rem)}
+#tool-card p.cardSentence{font-size:clamp(1.3rem,4vw,1.9rem)}
+#tool-card #cardDraw{font-size:clamp(1.15rem,3vw,1.4rem);min-height:66px;padding:12px 28px}
+/* 2. 위쪽 도구 줄 */
+#tool-card .topTools{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+#tool-card .topTools button{min-height:46px;font-size:.95rem}
+/* 3. 설정 접기 */
+#tool-card details.setup{border:1px solid var(--line);border-radius:12px;padding:0 12px;background:var(--bg)}
+#tool-card details.setup summary{cursor:pointer;padding:12px 0;font-weight:800}
+#tool-card details.setup .setBody2{display:grid;gap:10px;padding-bottom:12px}
+/* 4. 결과 칸의 다음 친구 버튼 */
+#tool-card .resBtns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#tool-card .resBtns button{min-height:58px;font-size:1.1rem}
+#tool-card #cardNext{background:var(--z2);border-color:var(--z2);color:#fff}
+@media (max-width:520px){#tool-card .pcard{min-height:210px}#tool-card .pcard b{font-size:1.35rem}}
+#tool-card .pcard b small.alias{display:block;font-size:.6em;color:var(--muted)}
 .cardPlay{display:grid;gap:10px;padding:12px;border-radius:14px;background:var(--bg)}
 .strRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .strRow>b{font-size:1.1rem}
@@ -690,17 +713,24 @@ header{position:relative;padding-right:118px}
   <!-- 카드 뽑기 도전 (5차시) -->
   <section class="panel tool" id="tool-card" hidden>
     <h2>🃏 카드 뽑기 도전</h2>
+    <div class="topTools"><button type="button" id="fsBtn">⛶ 화면 가득</button></div>
     <ol class="cardSteps">
       <li><b>🃏 카드 뽑기</b>를 눌러요.</li>
-      <li>잘 모르겠으면 <b>👀 보여 주기</b>로 먼저 보고 들어요.</li>
+      <li>잘 모르겠으면 <b>👀 예시 보기</b>로 먼저 보고 들어요.</li>
       <li><b>▶ 도전 시작</b>을 누르고 카드대로 <b>5번</b> 쳐요. 다 치면 바로 알려 줘요!</li>
     </ol>
+    <details class="setup" id="setupBox" open>
+      <summary>⚙️ 우리 모둠 설정 (인원 · 카드 종류 · 점수)</summary>
+      <div class="setBody2">
     <div class="turnBar"><span>우리 모둠 인원</span><div class="turnN" id="turnN" role="group" aria-label="모둠 인원 고르기"><button type="button" data-n="2">2명</button><button type="button" data-n="3">3명</button><button type="button" data-n="4">4명</button><button type="button" data-n="5">5명</button><button type="button" data-n="6">6명</button></div></div>
     <div class="turnBar"><span>카드 종류</span><div class="turnN" id="lvBtns" role="group" aria-label="카드 종류 고르기"><button type="button" data-lv="1">⭐ 기본 카드 4장</button><button type="button" data-lv="2">⭐⭐ 섞인 카드까지 8장</button></div></div>
+    <div class="turnBar"><span>점수</span><button type="button" id="scoreReset">🔄 점수 처음부터 (새 모둠·새 시간)</button></div>
+      </div>
+    </details>
     <p class="turnNow" id="turnNow" aria-live="polite"></p>
     <div class="cardRow">
-      <div class="pcard pInst" id="cardInst"><span class="ctop">악기 카드</span><div class="cpic" id="cardInstPic"><span class="cq">?</span></div><b id="cardInstName">&nbsp;</b></div>
-      <div class="pcard pSnd" id="cardSnd"><span class="ctop">소리 카드</span><div class="cpic carrow" id="cardSndPic"><span class="cq">?</span></div><b id="cardSndName">&nbsp;</b></div>
+      <div class="pcard pInst" id="cardInst" role="button" tabindex="0" aria-label="카드 뽑기"><span class="ctop">악기 카드</span><div class="cpic" id="cardInstPic"><span class="cq">?</span></div><b id="cardInstName">&nbsp;</b></div>
+      <div class="pcard pSnd" id="cardSnd" role="button" tabindex="0" aria-label="카드 뽑기"><span class="ctop">소리 카드</span><div class="cpic carrow" id="cardSndPic"><span class="cq">?</span></div><b id="cardSndName">&nbsp;</b></div>
     </div>
     <p class="cardSentence" id="cardSentence" aria-live="polite">‘카드 뽑기’를 눌러 보세요!</p>
     <div class="line cardBtns">
@@ -714,7 +744,7 @@ header{position:relative;padding-right:118px}
       <div class="tapSlots" id="tapSlots" aria-live="polite"></div>
       <p class="cardTapInfo" id="cardTapInfo" aria-live="polite"></p>
       <div class="line cardBtns">
-        <button type="button" class="bigbtn" id="cardDemo">👀 보여 주기</button>
+        <button type="button" class="bigbtn" id="cardDemo">👀 예시 보기</button>
         <button type="button" class="bigbtn primary" id="cardGo">▶ 도전 시작</button>
       </div>
     </div>
@@ -723,7 +753,10 @@ header{position:relative;padding-right:118px}
       <b id="cardResTxt"></b>
       <small id="cardResNum"></small>
       <p class="cardLearn" id="cardLearn"></p>
-      <button type="button" class="bigbtn" id="cardAgain">🔁 같은 카드로 다시</button>
+      <div class="resBtns">
+        <button type="button" class="bigbtn" id="cardAgain">🔁 같은 카드로 다시</button>
+        <button type="button" class="bigbtn" id="cardNext">➡ 다음 친구 차례 (카드 뽑기)</button>
+      </div>
     </div>
     <canvas id="cardCv" aria-label="친 순서대로 그린 소리 그래프"></canvas>
     <div id="cardScore"></div>
@@ -2668,9 +2701,13 @@ header{position:relative;padding-right:118px}
 
   // 모둠 차례: 1번 친구부터 돌아가며
   let memN=4, memTurn=0, memDone=false, memWin=[];
+  try{ const sv=JSON.parse(localStorage.getItem("meterCard_score")||"null"); if(sv){ memTurn=sv.t||0; memDone=!!sv.d; memWin=sv.w||[]; } }catch(e){}
+  const memSave=()=>{ try{ localStorage.setItem("meterCard_score",JSON.stringify({t:memTurn,d:memDone,w:memWin})); }catch(e){} };
   try{ memN=+(localStorage.getItem("memN")||4); }catch(e){}
   if(![2,3,4,5,6].includes(memN)) memN=4;
+  if(memTurn>=memN) memTurn=0;
   function memShow(){
+    memSave();
     document.querySelectorAll("#turnN button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.n===memN)));
     $("turnNow").textContent="🙋 "+(memTurn+1)+"번 친구 차례예요!";
     const box=$("cardScore"); box.className="memStars"; box.textContent="";
@@ -2753,7 +2790,7 @@ header{position:relative;padding-right:118px}
 
   function cardShow(){
     const I=CARD_INST[cardCur.i], S=CARD_SND[cardCur.s];
-    $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name+(cardCur.i==="glk"?" (실로폰)":"");
+    $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name; if(cardCur.i==="glk"){ const sm=document.createElement("small"); sm.className="alias"; sm.textContent="(실로폰)"; $("cardInstName").append(sm); }
     $("cardSndPic").textContent=S.icon; $("cardSndName").textContent=S.name;
     $("cardSnd").classList.toggle("lv2",S.lv===2);
     $("cardSentence").textContent="👉 "+I.name+"로 "+S.name+"!";
@@ -2774,12 +2811,35 @@ header{position:relative;padding-right:118px}
     do{ n={i:insts[Math.floor(Math.random()*insts.length)], s:deck[Math.floor(Math.random()*deck.length)]}; tries++; }
     while(cardLast && n.i===cardLast.i && n.s===cardLast.s && tries<20);
     cardCur=cardLast=n;
+    $("setupBox").open=false;
+    $("cardInst").scrollIntoView({behavior:still()?"auto":"smooth",block:"start"});
     ["cardInst","cardSnd"].forEach(id=>{ const el=$(id); el.classList.remove("flip"); void el.offsetWidth; if(!still()) el.classList.add("flip"); });
     if(still()) cardShow(); else setTimeout(cardShow,220);
   });
+  // 카드를 눌러도 뽑기, 다음 친구 버튼
+  ["cardInst","cardSnd"].forEach(id=>{ const el=$(id);
+    el.addEventListener("click",()=>{ if(!cardTaps) $("cardDraw").click(); });
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); if(!cardTaps) $("cardDraw").click(); } }); });
+  $("cardNext").addEventListener("click",()=>$("cardDraw").click());
+  // 점수 처음부터
+  $("scoreReset").addEventListener("click",()=>{
+    if(!confirm("모든 친구의 별을 지우고 1번 친구부터 다시 할까요?")) return;
+    memWin=[]; memTurn=0; memDone=false; memShow();
+  });
+  // 화면 가득 (주소창 숨기기)
+  $("fsBtn").addEventListener("click",async()=>{
+    try{ if(document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }catch(e){}
+  });
+  document.addEventListener("fullscreenchange",()=>{ const on=!!document.fullscreenElement; document.body.classList.toggle("fs",on); $("fsBtn").textContent=on?"⛶ 화면 가득 끝내기":"⛶ 화면 가득"; });
+  if(!document.documentElement.requestFullscreen) $("fsBtn").hidden=true;
+  // 게임하는 동안 태블릿 화면이 꺼지지 않게
+  let wake=null;
+  async function keepAwake(){ try{ if("wakeLock" in navigator && !wake && document.visibilityState==="visible"){ wake=await navigator.wakeLock.request("screen"); wake.addEventListener("release",()=>{ wake=null; }); } }catch(e){} }
+  document.addEventListener("pointerdown",keepAwake,{once:false,passive:true});
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") keepAwake(); });
   $("cardHint").addEventListener("click",()=>{ $("cardHintTxt").hidden=!$("cardHintTxt").hidden; $("cardHint").textContent=$("cardHintTxt").hidden?"💡 힌트 보기":"💡 힌트 숨기기"; });
 
-  // 👀 보여 주기: 카드대로 5번 쳐서 보여 줌 (기록하지 않음)
+  // 👀 예시 보기: 카드대로 5번 쳐서 보여 줌 (기록하지 않음)
   $("cardDemo").addEventListener("click",async()=>{
     if(!cardCur||cardTaps||cardBusy) return;
     const S=CARD_SND[cardCur.s], kal=cardCur.i==="kal";
@@ -2849,6 +2909,7 @@ header{position:relative;padding-right:118px}
     if(!ok){ $("cardHintTxt").hidden=false; $("cardHint").textContent="💡 힌트 숨기기"; }
     $("cardTapInfo").textContent="";
     memShow(); $("turnNow").textContent=ok?"다 했으면 ‘카드 뽑기’를 눌러 다음 친구에게 넘겨요!":"‘같은 카드로 다시’ 해 보거나, ‘카드 뽑기’로 다음 친구에게 넘겨요.";
+    $("cardNext").textContent = "➡ "+((memTurn+1)%memN+1)+"번 친구 차례 (카드 뽑기)";
     if(ok) cardConfetti();
     drawCard();
     $("cardResult").scrollIntoView({behavior:"smooth",block:"center"});
