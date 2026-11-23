@@ -351,16 +351,41 @@ body[data-mode="db"] #dbGraph{height:clamp(220px,38vh,400px)}
 .memStars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
 .memStars span{padding:8px 10px;border-radius:10px;background:var(--bg);font-weight:700}
 .memStars span.now{outline:3px solid var(--z2)}
+.strEnd{font-size:.85rem;font-weight:700;color:var(--muted)}
+.strBtns button{display:grid;justify-items:center;align-content:end;gap:2px}
+.strBtns button i{display:block;width:calc(6px + var(--k)*4px);height:calc(6px + var(--k)*4px);border-radius:50%;background:currentColor;opacity:.75}
+.tapSlots{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.tapSlots .slot{flex:1;min-width:0;min-height:58px;display:grid;place-items:center;align-content:center;border:2px dashed var(--line);border-radius:12px;font-weight:800;color:var(--muted);font-size:1.1rem;text-align:center;line-height:1.15;padding:4px 2px}
+.tapSlots .slot.on{border-style:solid;border-color:var(--trace);background:var(--panel);color:var(--ink)}
+.tapSlots .slot b{font-size:clamp(.9rem,2.6vw,1.15rem)}
+.tapSlots .slot small{font-size:.72rem;color:var(--muted);font-weight:700}
+.tapSlots .arr{font-size:1.3rem;color:var(--muted);flex:none}
+.tapSlots .arr.good{color:var(--z1)} .tapSlots .arr.bad{color:var(--z4)}
+.cardInstBox button{position:relative;overflow:visible}
+.cardInstBox button span{pointer-events:none}
+.cardInstBox button .ripple{position:absolute;left:50%;top:50%;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2);border:3px solid #fff;border-radius:50%;pointer-events:none;animation:ripple .7s ease-out forwards}
+@keyframes ripple{from{transform:scale(.3);opacity:.9}to{transform:scale(1.6);opacity:0}}
+.cardInstBox button.demo{outline:5px solid var(--z3);outline-offset:3px;filter:brightness(1.15)}
+.pcard.pSnd.lv2{border-color:#8e44ad;background:color-mix(in srgb,#8e44ad 12%,var(--panel))}
+.pcard.pSnd.lv2 .ctop{background:#8e44ad} .pcard.pSnd.lv2 b{color:#7d3c98}
+.cardResult{position:relative;overflow:hidden}
+.cardResult p.cardLearn{margin:0;font-size:1.05rem;font-weight:700;color:var(--ink);max-width:none}
+.cardResult p.cardLearn:empty{display:none}
+.cardResult .conf{position:absolute;top:-10px;font-style:normal;font-size:1.5rem;pointer-events:none;animation:conf 1.4s ease-in forwards}
+@keyframes conf{to{transform:translate(var(--dx),260px) rotate(200deg);opacity:0}}
+.memStars .tot{grid-column:1/-1;text-align:center;background:color-mix(in srgb,var(--z3) 16%,var(--panel))}
+.memStars .tot.all{background:var(--z1);color:#fff;font-size:1.15rem}
 .cardPlay{display:grid;gap:10px;padding:12px;border-radius:14px;background:var(--bg)}
 .strRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .strRow>b{font-size:1.1rem}
 .strBtns{display:flex;flex-wrap:wrap;gap:6px}
 .strBtns button{min-height:52px;min-width:56px;font-size:1.1rem;padding:6px 12px;touch-action:manipulation}
 .strBtns button[aria-pressed="true"]{background:var(--loud);border-color:var(--loud);color:#fff}
+@media (max-width:520px){.strRow{gap:6px}.strEnd{display:none}.strBtns{flex-wrap:nowrap;gap:4px}.strBtns button{min-width:46px;padding:6px 4px}}
 .cardInstBox{display:flex;align-items:flex-start;gap:clamp(4px,1.2vw,12px);height:clamp(220px,42vh,340px);padding:12px clamp(8px,2vw,22px);border-radius:16px;background:var(--wood)}
 .cardInstBox.glk{align-items:center}
 .cardInstBox button{flex:1;min-width:0;height:var(--h);padding:0;border-radius:10px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.cardInstBox.glk button{background:var(--c);border:2px solid #0003;color:#fff;font-size:clamp(.95rem,2.8vw,1.4rem);font-weight:800;text-shadow:0 1px 2px #0008;white-space:pre-line}
+.cardInstBox.glk button{background:var(--c);border:2px solid #0003;color:#fff;font-size:clamp(.95rem,2.8vw,1.4rem);font-weight:800;text-shadow:0 1px 2px #0008;white-space:pre-line;display:grid;place-items:center}
 .cardInstBox.kal{border-top:14px solid var(--woodD);border-radius:6px 6px 22px 22px}
 .cardInstBox.kal button{display:grid;grid-template-rows:1fr auto auto;justify-items:center;align-items:end;gap:2px;background:linear-gradient(90deg,var(--metal2),var(--metal1) 45%,var(--metal2));border:1px solid var(--metal2);border-radius:0 0 14px 14px;padding-bottom:6px;color:#1b2430}
 .cardInstBox.kal button span{font-weight:800;font-size:clamp(.8rem,2.4vw,1.15rem);white-space:pre-line;line-height:1.1}
@@ -640,8 +665,13 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   <!-- 카드 뽑기 도전 (5차시) -->
   <section class="panel tool" id="tool-card" hidden>
     <h2>🃏 카드 뽑기 도전</h2>
-    <ol class="cardSteps"><li><b>카드 뽑기</b>를 눌러요.</li><li><b>▶ 도전 시작</b>을 누르고, 화면 속 악기를 카드대로 쳐요.</li><li>다 쳤으면 <b>✔ 다 했어요</b>를 눌러요.</li></ol>
+    <ol class="cardSteps">
+      <li><b>🃏 카드 뽑기</b>를 눌러요.</li>
+      <li>잘 모르겠으면 <b>👀 보여 주기</b>로 먼저 보고 들어요.</li>
+      <li><b>▶ 도전 시작</b>을 누르고 카드대로 <b>5번</b> 쳐요. 다 치면 바로 알려 줘요!</li>
+    </ol>
     <div class="turnBar"><span>우리 모둠 인원</span><div class="turnN" id="turnN" role="group" aria-label="모둠 인원 고르기"><button type="button" data-n="2">2명</button><button type="button" data-n="3">3명</button><button type="button" data-n="4">4명</button><button type="button" data-n="5">5명</button><button type="button" data-n="6">6명</button></div></div>
+    <div class="turnBar"><span>카드 종류</span><div class="turnN" id="lvBtns" role="group" aria-label="카드 종류 고르기"><button type="button" data-lv="1">⭐ 기본 카드 4장</button><button type="button" data-lv="2">⭐⭐ 섞인 카드까지 8장</button></div></div>
     <p class="turnNow" id="turnNow" aria-live="polite"></p>
     <div class="cardRow">
       <div class="pcard pInst" id="cardInst"><span class="ctop">악기 카드</span><div class="cpic" id="cardInstPic"><span class="cq">?</span></div><b id="cardInstName">&nbsp;</b></div>
@@ -654,18 +684,20 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     </div>
     <p class="cardHintTxt" id="cardHintTxt" hidden></p>
     <div class="cardPlay" id="cardPlay" hidden>
-      <div class="strRow"><b>세기</b><div class="strBtns" id="strBtns" role="group" aria-label="세기 고르기"></div></div>
+      <div class="strRow"><b>세기</b><span class="strEnd">약하게</span><div class="strBtns" id="strBtns" role="group" aria-label="세기 고르기"></div><span class="strEnd">세게</span></div>
       <div class="cardInstBox" id="cardInstBox"></div>
+      <div class="tapSlots" id="tapSlots" aria-live="polite"></div>
       <p class="cardTapInfo" id="cardTapInfo" aria-live="polite"></p>
       <div class="line cardBtns">
+        <button type="button" class="bigbtn" id="cardDemo">👀 보여 주기</button>
         <button type="button" class="bigbtn primary" id="cardGo">▶ 도전 시작</button>
-        <button type="button" class="bigbtn primary" id="cardDone" hidden>✔ 다 했어요</button>
       </div>
     </div>
     <div class="cardResult" id="cardResult" hidden>
       <span class="em" id="cardEm"></span>
       <b id="cardResTxt"></b>
       <small id="cardResNum"></small>
+      <p class="cardLearn" id="cardLearn"></p>
       <button type="button" class="bigbtn" id="cardAgain">🔁 같은 카드로 다시</button>
     </div>
     <canvas id="cardCv" aria-label="친 순서대로 그린 소리 그래프"></canvas>
@@ -2557,19 +2589,24 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     const p=$("tool-light"); if(p.classList.contains("full")){ p.classList.remove("full"); $("tlFull").textContent="화면 가득 보기"; leaveFull(); }
   });
 
-  /* ---------- 5차시 ① 카드 뽑기 도전 (화면 속 악기로) ---------- */
+  /* ---------- 5차시 카드 뽑기 도전 (화면 속 악기로) ---------- */
   const CARD_INST={
-    glk:{name:"글로켄슈필", svg:'<svg viewBox="0 0 130 80" aria-hidden="true"><rect x="6" y="14" width="118" height="52" rx="6" fill="var(--wood)"/>'+
+    glk:{name:"글로켄슈필", part:"음판", svg:'<svg viewBox="0 0 130 80" aria-hidden="true"><rect x="6" y="14" width="118" height="52" rx="6" fill="var(--wood)"/>'+
       ["#e53935","#fb8c00","#fdd835","#43a047","#00acc1","#1e88e5","#5e35b1","#d81b60"].map((c,i)=>{const h=50-i*4.2;return '<rect x="'+(12+i*14)+'" y="'+(40-h/2)+'" width="11" height="'+h+'" rx="2" fill="'+c+'" stroke="#0003"/>';}).join("")+
       '<line x1="24" y1="76" x2="70" y2="68" stroke="#888" stroke-width="2.5"/><circle cx="70" cy="68" r="4" fill="#d32f2f"/></svg>'},
-    kal:{name:"칼림바", svg:'<svg viewBox="0 0 100 90" aria-hidden="true"><rect x="10" y="4" width="80" height="82" rx="10" fill="var(--wood)" stroke="var(--woodD)" stroke-width="2"/><rect x="14" y="20" width="72" height="5" rx="2" fill="var(--woodD)"/><circle cx="50" cy="64" r="11" fill="var(--hole)"/>'+
+    kal:{name:"칼림바", part:"건반", svg:'<svg viewBox="0 0 100 90" aria-hidden="true"><rect x="10" y="4" width="80" height="82" rx="10" fill="var(--wood)" stroke="var(--woodD)" stroke-width="2"/><rect x="14" y="20" width="72" height="5" rx="2" fill="var(--woodD)"/><circle cx="50" cy="64" r="11" fill="var(--hole)"/>'+
       [0,1,2,3,4,5,6,7,8].map(i=>{const d=Math.abs(i-4);const h=48-d*6;return '<rect x="'+(17+i*7.4)+'" y="8" width="5" height="'+h+'" rx="2.5" fill="var(--metal1)" stroke="var(--metal2)"/>';}).join("")+'</svg>'}
   };
+  // h: 높낮이 방향(1 높게, -1 낮게, 0 상관없음), d: 세기 방향(1 크게, -1 작게, 0 상관없음)
   const CARD_SND={
-    up:  {name:"세기를 점점 크게", kind:"db", dir:1,  icon:"🔈➜🔊"},
-    down:{name:"세기를 점점 작게", kind:"db", dir:-1, icon:"🔊➜🔈"},
-    hi:  {name:"높낮이를 점점 높게", kind:"hz", dir:1,  icon:"📈"},
-    lo:  {name:"높낮이를 점점 낮게", kind:"hz", dir:-1, icon:"📉"}
+    up:  {name:"세기를 점점 크게",   h:0, d:1,  icon:"🔈➜🔊", lv:1},
+    down:{name:"세기를 점점 작게",   h:0, d:-1, icon:"🔊➜🔈", lv:1},
+    hi:  {name:"높낮이를 점점 높게", h:1, d:0,  icon:"📈",     lv:1},
+    lo:  {name:"높낮이를 점점 낮게", h:-1,d:0,  icon:"📉",     lv:1},
+    hu:  {name:"점점 높고 크게",     h:1, d:1,  icon:"📈🔊",   lv:2},
+    hd:  {name:"점점 높고 작게",     h:1, d:-1, icon:"📈🔈",   lv:2},
+    lu:  {name:"점점 낮고 크게",     h:-1,d:1,  icon:"📉🔊",   lv:2},
+    ld:  {name:"점점 낮고 작게",     h:-1,d:-1, icon:"📉🔈",   lv:2}
   };
   // 진짜 악기로 할 때의 방법 (정리 표, 실험관찰 '정리해요'와 같은 말)
   const CARD_HINT={
@@ -2578,13 +2615,20 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     kal:{up:"건반을 처음엔 살짝, 갈수록 점점 세게 튕겨요.", down:"건반을 처음엔 세게, 갈수록 점점 약하게 튕겨요.",
          hi:"가운데 긴 건반부터 바깥쪽 짧은 건반 쪽으로 차례로 튕겨요.", lo:"바깥쪽 짧은 건반부터 가운데 긴 건반 쪽으로 차례로 튕겨요."}
   };
-  // 화면 속 악기로 할 때의 힌트
-  const CARD_TIP={
-    glk:{up:"같은 음판을 치면서, 칠 때마다 세기 버튼을 🔈1 → 2 → 3 → 4 → 🔊5 로 올려요.", down:"같은 음판을 치면서, 칠 때마다 세기 버튼을 🔊5 → 4 → 3 → 2 → 🔈1 로 내려요.",
-         hi:"왼쪽 긴 음판부터 오른쪽 짧은 음판으로 차례로 쳐요.", lo:"오른쪽 짧은 음판부터 왼쪽 긴 음판으로 차례로 쳐요."},
-    kal:{up:"같은 건반을 튕기면서, 칠 때마다 세기 버튼을 🔈1 → 2 → 3 → 4 → 🔊5 로 올려요.", down:"같은 건반을 튕기면서, 칠 때마다 세기 버튼을 🔊5 → 4 → 3 → 2 → 🔈1 로 내려요.",
-         hi:"가운데 긴 건반부터 바깥쪽 짧은 건반으로 차례로 튕겨요. 건반 아래 숫자 ①②③… 순서예요.", lo:"바깥쪽 짧은 건반부터 가운데 긴 건반으로 차례로 튕겨요. 숫자가 큰 것부터 ⑨⑧⑦… 순서예요."}
-  };
+  function cardTip(i,S){
+    const P=CARD_INST[i].part, out=[];
+    if(S.h) out.push(i==="glk" ? (S.h>0?"왼쪽 긴 음판부터 오른쪽 짧은 음판으로 차례로 쳐요.":"오른쪽 짧은 음판부터 왼쪽 긴 음판으로 차례로 쳐요.")
+                               : (S.h>0?"가운데 긴 건반부터 바깥쪽 짧은 건반으로, 번호 ①→②→③… 순서로 튕겨요.":"바깥쪽 짧은 건반부터 가운데 긴 건반으로, 번호 ⑤→④→③… 순서로 튕겨요."));
+    if(S.d) out.push((S.h?"그리고 ":"같은 "+P+"을 치면서, ")+"칠 때마다 세기 버튼을 "+(S.d>0?"🔈1 → 2 → 3 → 4 → 🔊5 로 올려요.":"🔊5 → 4 → 3 → 2 → 🔈1 로 내려요."));
+    return out.join(" ");
+  }
+  function cardLearn(i,S){
+    const P=CARD_INST[i].part, out=[];
+    if(S.h) out.push(P+"이 짧을수록 빨리 떨려서 높은 소리가 나요.");
+    if(S.d) out.push("세게 칠수록 "+P+"이 크게 떨려서 큰 소리가 나요.");
+    return "📖 "+out.join(" ");
+  }
+  const TAPS_N=5;
   const STR_VOL=[0,0.025,0.07,0.16,0.32,0.6];      // 세기 1~5
   const C5=523.25, hzSemi=s=>C5*Math.pow(2,s/12);
   // 글로켄슈필: 왼쪽(긴 음판, 낮은 소리) → 오른쪽(짧은 음판, 높은 소리)
@@ -2592,7 +2636,11 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
   // 칼림바: 가운데가 가장 길고 낮은 소리, 바깥쪽으로 갈수록 짧고 높은 소리 (진짜 칼림바처럼 좌우 번갈아)
   const KAL_KEYS=[["높은 레",14,9],["시",11,7],["솔",7,5],["미",4,3],["도",0,1],["레",2,2],["파",5,4],["라",9,6],["높은 도",12,8]];
   const CIRC="①②③④⑤⑥⑦⑧⑨";
-  let cardCur=null, cardLast=null, cardTaps=null, cardData=null, cardStr=3;
+  const still=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  let cardCur=null, cardLast=null, cardTaps=null, cardData=null, cardStr=3, cardKeys=[], cardBusy=false, cardLv=1;
+  try{ cardLv=+(localStorage.getItem("cardLv")||1)===2?2:1; }catch(e){}
+
   // 모둠 차례: 1번 친구부터 돌아가며
   let memN=4, memTurn=0, memDone=false, memWin=[];
   try{ memN=+(localStorage.getItem("memN")||4); }catch(e){}
@@ -2602,14 +2650,24 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     $("turnNow").textContent="🙋 "+(memTurn+1)+"번 친구 차례예요!";
     const box=$("cardScore"); box.className="memStars"; box.textContent="";
     for(let k=0;k<memN;k++){ const sp=document.createElement("span"); sp.textContent=(k+1)+"번 "+("⭐".repeat(memWin[k]||0)||"–"); if(k===memTurn) sp.className="now"; box.append(sp); }
+    const tot=memWin.slice(0,memN).reduce((a,b)=>a+(b||0),0);
+    const all=memN>0 && [...Array(memN)].every((_,k)=>(memWin[k]||0)>0);
+    const t=document.createElement("span"); t.className="tot"+(all?" all":"");
+    t.textContent= all ? "🏆 우리 모둠 모두 성공! (⭐ "+tot+"개)" : "우리 모둠 ⭐ "+tot+"개";
+    box.append(t);
   }
   document.querySelectorAll("#turnN button").forEach(b=>b.addEventListener("click",()=>{ memN=+b.dataset.n; if(memTurn>=memN) memTurn=0; try{ localStorage.setItem("memN",memN); }catch(e){} memShow(); }));
   memShow();
+  // 카드 종류: 기본 4장 / 섞인 카드까지 8장
+  function lvShow(){ document.querySelectorAll("#lvBtns button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.lv===cardLv))); }
+  document.querySelectorAll("#lvBtns button").forEach(b=>b.addEventListener("click",()=>{ cardLv=+b.dataset.lv; try{ localStorage.setItem("cardLv",cardLv); }catch(e){} lvShow(); }));
+  lvShow();
 
   // 세기 버튼
   for(let k=1;k<=5;k++){
     const b=document.createElement("button"); b.type="button"; b.dataset.s=k;
-    b.textContent=(k===1?"🔈 ":k===5?"🔊 ":"")+k; b.setAttribute("aria-label","세기 "+k+(k===1?" (가장 약하게)":k===5?" (가장 세게)":""));
+    b.innerHTML="<i></i><span></span>"; b.querySelector("span").textContent=k; b.querySelector("i").style.setProperty("--k",k);
+    b.setAttribute("aria-label","세기 "+k+(k===1?" (가장 약하게)":k===5?" (가장 세게)":""));
     b.addEventListener("click",()=>{ cardStr=k; strShow(); });
     $("strBtns").append(b);
   }
@@ -2618,128 +2676,193 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
 
   // 화면 속 악기 그리기
   function cardBuildInst(kind){
-    const box=$("cardInstBox"); box.textContent=""; box.className="cardInstBox "+kind;
-    const keys = kind==="glk" ? GLK_KEYS.map(([nm,s,c],i)=>({nm,s,c,h:100-i*6,pos:i})) : KAL_KEYS.map(([nm,s,ord],i)=>({nm,s,ord,h:100-s*3,pos:i}));
+    const box=$("cardInstBox"); box.textContent=""; box.className="cardInstBox "+kind; cardKeys=[];
+    const keys = kind==="glk" ? GLK_KEYS.map(([nm,s,c],i)=>({nm,s,c,h:100-i*6})) : KAL_KEYS.map(([nm,s,ord])=>({nm,s,ord,h:100-s*3}));
     keys.forEach(k=>{
       const b=document.createElement("button"); b.type="button";
-      if(kind==="glk"){ b.style.setProperty("--c",k.c); b.style.setProperty("--h",k.h+"%"); b.textContent=k.nm.replace("높은 ","높은\n"); }
-      else { b.style.setProperty("--h",k.h+"%"); b.innerHTML="<i></i><span></span><small></small>"; b.querySelector("span").textContent=k.nm.replace("높은 ","높은\n"); b.querySelector("small").textContent=CIRC[k.ord-1]; }
+      if(kind==="glk"){ b.style.setProperty("--c",k.c); b.style.setProperty("--h",k.h+"%"); b.innerHTML="<span></span>"; b.querySelector("span").textContent=k.nm.replace("높은 ","높은\n"); }
+      else { b.style.setProperty("--h",k.h+"%"); b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=k.nm.replace("높은 ","높은\n"); b.querySelector("small").textContent=CIRC[k.ord-1]; }
       b.setAttribute("aria-label",k.nm+(kind==="glk"?" 음판 치기":" 건반 튕기기"));
       const f=hzSemi(k.s);
-      const hit=()=>{
+      const sound=()=>{
         playNote(f,{vol:STR_VOL[cardStr],dur:1.1,kind:"pluck"});
+        b.style.setProperty("--amp",(0.6+cardStr*0.45)+"px");
         b.classList.remove("hit"); void b.offsetWidth; b.classList.add("hit");
-        b.style.setProperty("--amp",(0.6+cardStr*0.35)+"px");
-        if(cardTaps){ cardTaps.push({f,nm:k.nm,lv:cardStr}); cardTapShow(); drawCard(); }
+        if(!still()){ const r=document.createElement("i"); r.className="ripple"; r.style.setProperty("--sz",(30+cardStr*22)+"px"); b.append(r); setTimeout(()=>r.remove(),700); }
+      };
+      const hit=()=>{
+        if(cardBusy) return;
+        if(cardTaps && cardTaps.length>=TAPS_N) return;
+        sound();
+        if(cardTaps){ cardTaps.push({f,nm:k.nm,lv:cardStr}); cardSlots(); drawCard(); if(cardTaps.length>=TAPS_N){ cardBusy=true; setTimeout(()=>{ cardBusy=false; cardFinish(); },700); } }
       };
       b.addEventListener("pointerdown",e=>{ e.preventDefault(); hit(); });
       b.addEventListener("click",e=>{ if(e.detail===0) hit(); });
+      cardKeys.push({el:b,s:k.s,nm:k.nm,sound});
       box.append(b);
     });
   }
-  function cardTapShow(){
-    const n=cardTaps?cardTaps.length:0;
-    $("cardTapInfo").textContent = n ? "지금까지 "+n+"번 쳤어요. 다 쳤으면 ‘✔ 다 했어요’를 눌러요." : "카드대로 악기를 쳐 보세요! (3번 이상)";
+  // 친 소리 5칸과 사이 화살표
+  function cardSlots(){
+    const box=$("tapSlots"); box.textContent="";
+    const S=cardCur?CARD_SND[cardCur.s]:null, taps=cardTaps||[];
+    for(let i=0;i<TAPS_N;i++){
+      if(i>0){
+        const a=document.createElement("b"); a.className="arr";
+        if(taps[i] && S){
+          const dh=Math.sign(taps[i].f-taps[i-1].f), dd=Math.sign(taps[i].lv-taps[i-1].lv);
+          const okH=!S.h||dh===S.h, okD=!S.d||dd===S.d, badH=S.h&&dh===-S.h, badD=S.d&&dd===-S.d;
+          const mv = S.h ? dh : dd;
+          a.textContent = mv>0?"⬆":mv<0?"⬇":"➡";
+          a.classList.add(okH&&okD?"good":(badH||badD)?"bad":"same");
+        } else a.textContent="›";
+        box.append(a);
+      }
+      const d=document.createElement("span"); d.className="slot";
+      const t=taps[i];
+      if(t){ d.classList.add("on"); d.innerHTML="<b></b><small></small>"; d.querySelector("b").textContent= S&&!S.h ? "🔊"+t.lv : t.nm; d.querySelector("small").textContent= S&&S.h&&S.d ? "세기 "+t.lv : S&&!S.h ? "세기" : Math.round(t.f)+"Hz"; }
+      else d.textContent=i+1;
+      box.append(d);
+    }
   }
 
   function cardShow(){
     const I=CARD_INST[cardCur.i], S=CARD_SND[cardCur.s];
     $("cardInstPic").innerHTML=I.svg; $("cardInstName").textContent=I.name+(cardCur.i==="glk"?" (실로폰)":"");
     $("cardSndPic").textContent=S.icon; $("cardSndName").textContent=S.name;
+    $("cardSnd").classList.toggle("lv2",S.lv===2);
     $("cardSentence").textContent="👉 "+I.name+"로 "+S.name+"!";
-    $("cardHintTxt").hidden=true; $("cardHintTxt").textContent="💡 "+CARD_TIP[cardCur.i][cardCur.s];
+    $("cardHintTxt").hidden=true; $("cardHintTxt").textContent="💡 "+cardTip(cardCur.i,S);
     $("cardHint").disabled=false; $("cardHint").textContent="💡 힌트 보기";
     cardBuildInst(cardCur.i);
-    cardTaps=null; cardData=null; cardStr=3; strShow();
+    cardTaps=null; cardData=null; cardStr=3; strShow(); cardSlots();
     $("cardPlay").hidden=false; $("cardResult").hidden=true;
-    $("cardGo").hidden=false; $("cardGo").disabled=false; $("cardGo").classList.add("ready"); $("cardDone").hidden=true;
-    $("cardTapInfo").textContent="먼저 마음껏 연습해 봐요. 준비되면 ‘▶ 도전 시작’을 눌러요!";
+    $("cardGo").disabled=false; $("cardGo").classList.add("ready"); $("cardDemo").disabled=false;
+    $("cardTapInfo").textContent="먼저 마음껏 쳐 보며 연습해요. 준비되면 ‘▶ 도전 시작’!";
     drawCard();
   }
   $("cardDraw").addEventListener("click",()=>{
-    if(cardTaps) return;
+    if(cardTaps||cardBusy) return;
     if(memDone){ memTurn=(memTurn+1)%memN; memDone=false; memShow(); }
-    const deck=Object.keys(CARD_SND), insts=Object.keys(CARD_INST);
+    const deck=Object.keys(CARD_SND).filter(k=>CARD_SND[k].lv<=cardLv), insts=Object.keys(CARD_INST);
     let n, tries=0;
     do{ n={i:insts[Math.floor(Math.random()*insts.length)], s:deck[Math.floor(Math.random()*deck.length)]}; tries++; }
     while(cardLast && n.i===cardLast.i && n.s===cardLast.s && tries<20);
     cardCur=cardLast=n;
-    const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-    ["cardInst","cardSnd"].forEach(id=>{ const el=$(id); el.classList.remove("flip"); void el.offsetWidth; if(!reduce) el.classList.add("flip"); });
-    if(reduce) cardShow(); else setTimeout(cardShow,220);
+    ["cardInst","cardSnd"].forEach(id=>{ const el=$(id); el.classList.remove("flip"); void el.offsetWidth; if(!still()) el.classList.add("flip"); });
+    if(still()) cardShow(); else setTimeout(cardShow,220);
   });
   $("cardHint").addEventListener("click",()=>{ $("cardHintTxt").hidden=!$("cardHintTxt").hidden; $("cardHint").textContent=$("cardHintTxt").hidden?"💡 힌트 보기":"💡 힌트 숨기기"; });
+
+  // 👀 보여 주기: 카드대로 5번 쳐서 보여 줌 (기록하지 않음)
+  $("cardDemo").addEventListener("click",async()=>{
+    if(!cardCur||cardTaps||cardBusy) return;
+    const S=CARD_SND[cardCur.s], kal=cardCur.i==="kal";
+    let semis = S.h ? [0,2,4,5,7] : (kal?[0,0,0,0,0]:[7,7,7,7,7]);
+    if(S.h<0) semis=semis.slice().reverse();
+    let lvs = S.d ? [1,2,3,4,5] : [3,3,3,3,3];
+    if(S.d<0) lvs=lvs.slice().reverse();
+    cardBusy=true; ["cardDemo","cardGo","cardDraw"].forEach(id=>$(id).disabled=true);
+    $("cardTapInfo").textContent="👀 잘 보고 들어 보세요!";
+    const keep=cardStr;
+    for(let i=0;i<TAPS_N;i++){
+      const k=cardKeys.find(x=>x.s===semis[i]); if(!k) continue;
+      cardStr=lvs[i]; strShow();
+      k.el.classList.add("demo"); k.sound();
+      await wait(700); k.el.classList.remove("demo");
+    }
+    cardStr=keep; strShow(); cardBusy=false;
+    ["cardDemo","cardGo","cardDraw"].forEach(id=>$(id).disabled=false);
+    $("cardTapInfo").textContent="이제 직접 해 봐요! ‘▶ 도전 시작’을 눌러요.";
+  });
+
   function cardStart(){
-    if(!cardCur) return;
+    if(!cardCur||cardBusy) return;
     cardTaps=[]; cardData=null; $("cardResult").hidden=true;
-    $("cardGo").hidden=true; $("cardGo").classList.remove("ready"); $("cardDone").hidden=false; $("cardDraw").disabled=true;
-    $("cardTapInfo").textContent="도전 시작! 카드대로 악기를 쳐 보세요! (3번 이상)";
-    drawCard();
+    $("cardGo").disabled=true; $("cardGo").classList.remove("ready"); $("cardDemo").disabled=true; $("cardDraw").disabled=true;
+    $("cardTapInfo").textContent="도전 시작! 카드대로 5번 쳐요. 다 치면 바로 알려 줘요!";
+    cardSlots(); drawCard();
     $("cardPlay").scrollIntoView({behavior:"smooth",block:"start"});
   }
   $("cardGo").addEventListener("click",cardStart);
   $("cardAgain").addEventListener("click",cardStart);
-  $("cardDone").addEventListener("click",()=>{
-    if(!cardTaps) return;
-    if(cardTaps.length<3){ $("cardTapInfo").textContent="⚠ 3번 이상 쳐야 ‘점점’ 바뀌는지 알 수 있어요!"; return; }
-    cardFinish();
-  });
 
+  function judgeDim(vals,dir){
+    let good=0,bad=0;
+    for(let i=1;i<vals.length;i++){ const d=(vals[i]-vals[i-1])*dir; if(d>0) good++; else if(d<0) bad++; }
+    const overall=(vals[vals.length-1]-vals[0])*dir;
+    return {ok: overall>0 && good>=3 && bad<=1, good, bad, overall};
+  }
   function cardFinish(){
     const taps=cardTaps; cardTaps=null;
-    $("cardDone").hidden=true; $("cardGo").hidden=false; $("cardDraw").disabled=false;
-    const S=CARD_SND[cardCur.s];
-    const vals = S.kind==="hz" ? taps.map(t=>t.f) : taps.map(t=>t.lv);
-    let good=0, bad=0;
-    for(let i=1;i<vals.length;i++){ const d=(vals[i]-vals[i-1])*S.dir; if(d>0) good++; else if(d<0) bad++; }
-    const overall=(vals[vals.length-1]-vals[0])*S.dir;
-    const ok = overall>0 && good>=2 && bad<=1;
-    const word = S.kind==="db" ? (S.dir>0?"커졌어요":"작아졌어요") : (S.dir>0?"높아졌어요":"낮아졌어요");
-    const anti = S.kind==="db" ? (S.dir>0?"작아졌어요":"커졌어요") : (S.dir>0?"낮아졌어요":"높아졌어요");
-    let msg;
-    if(ok) msg="소리가 점점 "+word+"!";
-    else if(good===0 && bad===0) msg = S.kind==="db" ? "세기가 그대로예요. 칠 때마다 세기 버튼을 바꿔 봐요!" : "높이가 그대로예요. 다른 "+(cardCur.i==="glk"?"음판":"건반")+"으로 옮겨 가며 쳐 봐요!";
-    else if(overall<0) msg="반대로 점점 "+anti+"! 순서를 거꾸로 해 봐요.";
-    else if(bad>1) msg="중간에 거꾸로 간 곳이 있어요. 한 방향으로만 바꿔 봐요!";
-    else msg="조금만 더! 두 번 이상 계속 바꿔 봐요.";
-    const show=taps.slice(0,9);
-    const num = S.kind==="hz" ? show.map(t=>t.nm+" "+Math.round(t.f)+"Hz").join(" → ")+(taps.length>9?" …":"")
-                              : "세기 "+show.map(t=>t.lv).join(" → ")+(taps.length>9?" …":"");
-    cardData={kind:S.kind, taps};
+    $("cardGo").disabled=false; $("cardDemo").disabled=false; $("cardDraw").disabled=false;
+    const S=CARD_SND[cardCur.s], P=CARD_INST[cardCur.i].part;
+    const parts=[], tips=[];
+    let ok=true;
+    if(S.h){
+      const r=judgeDim(taps.map(t=>t.f),S.h); ok=ok&&r.ok;
+      if(!r.ok) tips.push(r.good===0&&r.bad===0 ? "높이가 그대로예요. 다른 "+P+"으로 옮겨 가며 쳐 봐요!"
+        : r.overall<0 ? "높낮이가 반대로 점점 "+(S.h>0?"낮아졌어요":"높아졌어요")+"! 순서를 거꾸로 해 봐요."
+        : r.bad>1 ? "높낮이가 중간에 거꾸로 간 곳이 있어요. 한 방향으로만 옮겨요!" : "높낮이를 조금 더 꾸준히 바꿔 봐요!");
+      parts.push(S.h>0?"높아졌어요":"낮아졌어요");
+    }
+    if(S.d){
+      const r=judgeDim(taps.map(t=>t.lv),S.d); ok=ok&&r.ok;
+      if(!r.ok) tips.push(r.good===0&&r.bad===0 ? "세기가 그대로예요. 칠 때마다 세기 버튼을 바꿔 봐요!"
+        : r.overall<0 ? "세기가 반대로 점점 "+(S.d>0?"작아졌어요":"커졌어요")+"! 거꾸로 해 봐요."
+        : r.bad>1 ? "세기가 중간에 거꾸로 간 곳이 있어요. 한 방향으로만 바꿔요!" : "세기를 조금 더 꾸준히 바꿔 봐요!");
+      parts.push(S.d>0?"커졌어요":"작아졌어요");
+    }
+    const both = S.h&&S.d ? (S.h>0?"높아지고 ":"낮아지고 ")+(S.d>0?"커졌어요":"작아졌어요") : parts[0];
+    const msg = ok ? "소리가 점점 "+both+"!" : tips.join(" ");
+    const num = (S.h ? taps.map(t=>t.nm).join(" → ") : "") + (S.h&&S.d ? "  ·  " : "") + (S.d ? "세기 "+taps.map(t=>t.lv).join(" → ") : "");
+    cardData={taps};
     memDone=true; if(ok) memWin[memTurn]=(memWin[memTurn]||0)+1;
     $("cardResult").hidden=false; $("cardResult").className="cardResult"+(ok?"":" no");
     $("cardEm").textContent=ok?"🎉":"🔁"; $("cardResTxt").textContent=(ok?"성공! ":"")+msg; $("cardResNum").textContent=num;
+    $("cardLearn").textContent= ok ? cardLearn(cardCur.i,S) : "";
     if(!ok){ $("cardHintTxt").hidden=false; $("cardHint").textContent="💡 힌트 숨기기"; }
     $("cardTapInfo").textContent="";
-    memShow(); $("turnNow").textContent="다 했으면 ‘카드 뽑기’를 눌러 다음 친구에게 넘겨요!";
+    memShow(); $("turnNow").textContent=ok?"다 했으면 ‘카드 뽑기’를 눌러 다음 친구에게 넘겨요!":"‘같은 카드로 다시’ 해 보거나, ‘카드 뽑기’로 다음 친구에게 넘겨요.";
+    if(ok) cardConfetti();
     drawCard();
     $("cardResult").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  function cardConfetti(){
+    if(still()) return;
+    const box=$("cardResult"), em=["🎉","⭐","🎵","✨","🎶","🌟"];
+    for(let i=0;i<22;i++){
+      const p=document.createElement("i"); p.className="conf"; p.textContent=em[i%em.length];
+      p.style.left=(Math.random()*100)+"%"; p.style.setProperty("--dx",(Math.random()*80-40)+"px"); p.style.animationDelay=(Math.random()*0.3)+"s";
+      box.append(p); setTimeout(()=>p.remove(),1700);
+    }
   }
   // 친 순서대로 높낮이(또는 세기)를 점으로 보여 주기
   function drawCard(){
     const cv=$("cardCv"); if(!cv || $("tool-card").hidden) return;
     const {c,W,H}=fitCanvas(cv); c.clearRect(0,0,W,H);
     const taps = cardTaps || (cardData?cardData.taps:[]);
-    const kind = cardCur ? CARD_SND[cardCur.s].kind : null;
+    const S = cardCur ? CARD_SND[cardCur.s] : null;
     const L=34, R=W-20, T=30, B=H-26;
     c.font="600 13px "+css("--sans"); c.textBaseline="middle";
     c.fillStyle="rgba(127,127,127,.1)"; c.fillRect(L,T,R-L,B-T);
     c.fillStyle=css("--muted"); c.textAlign="left";
-    if(!kind){ c.textAlign="center"; c.fillText("카드를 뽑고 도전하면 친 순서대로 그래프가 그려져요.",W/2,(T+B)/2); return; }
-    c.fillText(kind==="db" ? "▲ 큰 소리   ▼ 작은 소리" : "▲ 높은 소리   ▼ 낮은 소리", L, 12);
+    if(!S){ c.textAlign="center"; c.fillText("카드를 뽑고 도전하면 친 순서대로 그래프가 그려져요.",W/2,(T+B)/2); return; }
+    const byLv=!S.h;
+    c.fillText(byLv ? "▲ 큰 소리   ▼ 작은 소리" : "▲ 높은 소리   ▼ 낮은 소리"+(S.d?"   ● 점이 클수록 큰 소리":""), L, 12);
     c.textAlign="center"; c.fillText("친 순서 →",(L+R)/2,H-10);
     if(!taps.length){ c.fillText(cardTaps?"악기를 치면 점이 찍혀요.":"‘▶ 도전 시작’을 누르면 기록해요.",(L+R)/2,(T+B)/2); return; }
-    const n=Math.max(taps.length,5), X=i=>L+(R-L)*(i+0.5)/n;
+    const X=i=>L+(R-L)*(i+0.5)/TAPS_N;
     let Y;
-    if(kind==="db") Y=v=>B-(v-0.5)/5*(B-T);
+    if(byLv) Y=v=>B-(v-0.5)/5*(B-T);
     else { const lo=Math.log2(hzSemi(-1)), hi=Math.log2(hzSemi(15)); Y=v=>B-(Math.log2(v)-lo)/(hi-lo)*(B-T); }
-    const col=css(kind==="db"?"--loud":"--trace");
-    const pts=taps.map((t,i)=>[X(i), Y(kind==="db"?t.lv:t.f)]);
+    const col=css(byLv?"--loud":"--trace");
+    const pts=taps.map((t,i)=>[X(i), Y(byLv?t.lv:t.f)]);
     c.strokeStyle=col; c.lineWidth=3; c.lineJoin="round"; c.beginPath(); pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y)); c.stroke();
     c.font="700 13px "+css("--sans");
     pts.forEach(([x,y],i)=>{
-      c.fillStyle=col; c.beginPath(); c.arc(x,y,kind==="db"?4+taps[i].lv*1.6:7,0,7); c.fill();
-      if(n<=14){ c.fillStyle=css("--ink"); c.fillText(kind==="db"?String(taps[i].lv):taps[i].nm.replace("높은 ","↑"), x, Math.max(T+8,y-16)); }
+      c.fillStyle=col; c.beginPath(); c.arc(x,y,(S.d?3+taps[i].lv*1.8:7),0,7); c.fill();
+      c.fillStyle=css("--ink"); c.fillText(byLv?String(taps[i].lv):taps[i].nm.replace("높은 ","↑"), x, Math.max(T+8,y-18));
     });
   }
   // 정리 표 (진짜 악기로 할 때)
@@ -2748,8 +2871,8 @@ body.bigview .bigbar{display:flex;gap:8px;position:fixed;z-index:40;
     $("cardSum").innerHTML="<table><thead><tr><th>악기</th><th>세기 점점 크게</th><th>세기 점점 작게</th><th>높낮이 점점 높게</th><th>높낮이 점점 낮게</th></tr></thead><tbody>"+rows+"</tbody></table>"+
       "<p class='small'>세게 치거나 튕기면 물체가 <b>크게 떨려서 큰 소리</b>가 나요. 떨리는 부분이 <b>짧을수록 높은 소리</b>, 길수록 낮은 소리가 나요.</p>";
   })();
+  cardSlots();
   new ResizeObserver(()=>drawCard()).observe($("cardCv"));
-
 
   // 매 프레임: 열린 활동만 그리기
   function toolsFrame(now){
