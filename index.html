@@ -2852,9 +2852,9 @@ header{position:relative;padding-right:118px}
     const keep=cardStr;
     for(let i=0;i<TAPS_N;i++){
       const k=cardKeys.find(x=>x.s===semis[i]); if(!k) continue;
-      cardStr=lvs[i]; strShow();
+      cardStr=lvs[i]; strShow(); $("cardTapInfo").textContent="👀 "+(i+1)+"번째 소리 — 잘 보고 들어 보세요!"; await wait(400);
       k.el.classList.add("demo"); k.sound();
-      await wait(700); k.el.classList.remove("demo");
+      await wait(1200); k.el.classList.remove("demo"); await wait(500);
     }
     cardStr=keep; strShow(); cardBusy=false;
     ["cardDemo","cardGo","cardDraw"].forEach(id=>$(id).disabled=false);
